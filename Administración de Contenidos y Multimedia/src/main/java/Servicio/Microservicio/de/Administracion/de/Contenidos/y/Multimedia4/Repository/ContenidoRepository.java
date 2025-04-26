@@ -18,9 +18,9 @@ public class ContenidoRepository {
     }
 
     // Devuelve todos los contenidos
-public List<Contenido> obtenerContenidos() {
-    return new ArrayList<>(listaContenidos); // Se devuelve una copia para proteger la lista original
-}
+    public List<Contenido> obtenerContenidos() {
+        return new ArrayList<>(listaContenidos); // Se devuelve una copia para proteger la lista original
+    }
 
 
     // Busca un contenido por su ID
