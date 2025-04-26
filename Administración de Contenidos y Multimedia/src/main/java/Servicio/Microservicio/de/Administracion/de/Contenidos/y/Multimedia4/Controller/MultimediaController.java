@@ -27,7 +27,7 @@ public class MultimediaController {
     }
 
     // Buscar una publicación por ID
-    @GetMapping("/{id}")
+    @GetMapping("{/id}")
     public Multimedia buscarMultimedia(@PathVariable int id) {
         return multimediaService.getMultimediaId(id);
     }

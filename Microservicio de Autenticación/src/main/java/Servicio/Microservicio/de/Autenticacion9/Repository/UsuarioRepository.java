@@ -42,8 +42,8 @@ public class UsuarioRepository {
 
     // Actualiza un usuario existente, validando que el ID exista primero
     public Usuario actualizar(Usuario usuario) {
-        Usuario existente = buscarPorId(usuario.getIdUsuario());
-        if (existente == null) {
+        Usuario existenteusuario = buscarPorId(usuario.getIdUsuario());
+        if (existenteusuario == null) {
             throw new IllegalArgumentException("No se puede actualizar porque no existe un usuario con ID " + usuario.getIdUsuario());
         }
         eliminar(usuario.getIdUsuario());
