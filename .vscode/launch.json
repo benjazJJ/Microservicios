@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-Application<Microservicio-de-Prestamos-5>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "Servicio.Microservicio.de.Prestamos5.Application",
+            "projectName": "Microservicio-de-Prestamos-5",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
