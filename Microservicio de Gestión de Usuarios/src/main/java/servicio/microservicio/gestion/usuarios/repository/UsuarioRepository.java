@@ -1,22 +1,23 @@
-package Servicio.Microservicio.de.Autenticacion9.Repository;
+package servicio.microservicio.gestion.usuarios.repository;
+
+import servicio.microservicio.gestion.usuarios.model.Usuario;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.stereotype.Repository;
-
-import Servicio.Microservicio.de.Autenticacion9.Model.Usuario;
-
 @Repository
 public class UsuarioRepository {
 
-    private List<Usuario> listaUsuarios = new ArrayList<>();
+    private final List<Usuario> listaUsuarios = new ArrayList<>();
 
+    // Constructor: agregamos usuarios de ejemplo 
     public UsuarioRepository() {
-        listaUsuarios.add(new Usuario(1, "Carlos Muñoz", "carlos.munoz@example.com", "contrasena123"));
-        listaUsuarios.add(new Usuario(2, "María López", "maria.lopez@example.com", "pass456"));
+        listaUsuarios.add(new Usuario(1, "Benja Palma", "20.123.456-7", "benja@example.com", "+56912345678"));
+        listaUsuarios.add(new Usuario(2, "Carlos Muñoz", "19.876.543-2", "carlos@example.com", "+56987654321"));
     }
 
+    // Devuelve todos los usuarios
     public List<Usuario> obtenerUsuarios() {
         return new ArrayList<>(listaUsuarios);
     }
@@ -42,8 +43,8 @@ public class UsuarioRepository {
 
     // Actualiza un usuario existente, validando que el ID exista primero
     public Usuario actualizar(Usuario usuario) {
-        Usuario existenteusuario = buscarPorId(usuario.getIdUsuario());
-        if (existenteusuario == null) {
+        Usuario existente = buscarPorId(usuario.getIdUsuario());
+        if (existente == null) {
             throw new IllegalArgumentException("No se puede actualizar porque no existe un usuario con ID " + usuario.getIdUsuario());
         }
         eliminar(usuario.getIdUsuario());

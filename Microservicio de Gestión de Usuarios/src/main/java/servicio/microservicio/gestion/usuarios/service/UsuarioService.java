@@ -1,12 +1,11 @@
-package Servicio.Microservicio.de.Autenticacion9.Service;
+package servicio.microservicio.gestion.usuarios.service;
 
-import java.util.List;
-
+import servicio.microservicio.gestion.usuarios.model.Usuario;
+import servicio.microservicio.gestion.usuarios.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import Servicio.Microservicio.de.Autenticacion9.Model.Usuario;
-import Servicio.Microservicio.de.Autenticacion9.Repository.UsuarioRepository;
+import java.util.List;
 
 @Service
 public class UsuarioService {
@@ -14,30 +13,29 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    // Devuelve todos los Usuarios
+    // Obtener todos los usuarios
     public List<Usuario> getUsuarios() {
         return usuarioRepository.obtenerUsuarios();
     }
 
-    // Guarda un nuevo usuario
+    // Guardar un nuevo usuario
     public Usuario saveUsuario(Usuario usuario) {
         return usuarioRepository.guardar(usuario);
     }
 
-    // Busca un usuario por su ID
-    public Usuario getUsuarioId(int idUsuario) {
+    // Buscar un usuario por su ID
+    public Usuario getUsuarioById(int idUsuario) {
         return usuarioRepository.buscarPorId(idUsuario);
     }
 
-    // Actualiza un usuario existente
+    // Actualizar un usuario existente
     public Usuario updateUsuario(Usuario usuario) {
         return usuarioRepository.actualizar(usuario);
     }
 
-    // Elimina un usuario por su ID
+    // Eliminar un usuario por su ID
     public String deleteUsuario(int idUsuario) {
         usuarioRepository.eliminar(idUsuario);
         return "Usuario eliminado correctamente";
     }
-
 }
