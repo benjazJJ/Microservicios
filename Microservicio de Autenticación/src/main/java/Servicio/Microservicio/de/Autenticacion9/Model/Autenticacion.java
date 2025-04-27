@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class Login {
+public class Autenticacion {
     private int idLogin;            //ID Login del Usuario
     private String correo;          // Correo usado para iniciar sesión
     private String contrasena;      // Contraseña del usuario

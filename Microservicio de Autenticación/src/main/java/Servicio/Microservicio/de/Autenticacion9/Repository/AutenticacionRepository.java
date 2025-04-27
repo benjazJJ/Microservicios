@@ -5,25 +5,25 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import Servicio.Microservicio.de.Autenticacion9.Model.Login;
+import Servicio.Microservicio.de.Autenticacion9.Model.Autenticacion;
 
 @Repository
-public class LoginRepository {
+public class AutenticacionRepository {
 
-    private List<Login> listaLogin = new ArrayList<>();
+    private List<Autenticacion> listaLogin = new ArrayList<>();
 
-    public LoginRepository() {
-        listaLogin.add(new Login(1, "carlos.munoz@example.com", "contrasena123"));
-        listaLogin.add(new Login(2, "maria.lopez@example.com", "pass456"));
+    public AutenticacionRepository() {
+        listaLogin.add(new Autenticacion(1, "carlos.munoz@example.com", "contrasena123"));
+        listaLogin.add(new Autenticacion(2, "maria.lopez@example.com", "pass456"));
         
     }
-    public List<Login> obtenerLogins() {
+    public List<Autenticacion> obtenerLogins() {
         return new ArrayList<>(listaLogin);
     }
 
     // Busca un Login por su ID
-    public Login buscarPorIdLogin(int idLogin) {
-        for (Login login : listaLogin) {
+    public Autenticacion buscarPorIdLogin(int idLogin) {
+        for (Autenticacion login : listaLogin) {
             if (login.getIdLogin() == idLogin) {
                 return login;
             }
@@ -32,7 +32,7 @@ public class LoginRepository {
     }
 
     // Guarda un nuevo login, validando que no exista un ID duplicado
-    public Login guardarLogin(Login login) {
+    public Autenticacion guardarLogin(Autenticacion login) {
         if (buscarPorIdLogin(login.getIdLogin()) != null) {
             throw new IllegalArgumentException("Ya existe un login con el ID " + login.getIdLogin());
         }
@@ -41,8 +41,8 @@ public class LoginRepository {
     }
 
     // Actualiza un login existente, validando que el ID exista primero
-    public Login actualizarLogin(Login login) {
-        Login existentelogin = buscarPorIdLogin(login.getIdLogin());
+    public Autenticacion actualizarLogin(Autenticacion login) {
+        Autenticacion existentelogin = buscarPorIdLogin(login.getIdLogin());
         if (existentelogin == null) {
             throw new IllegalArgumentException("No se puede actualizar porque no existe un login con ID " + login.getIdLogin());
         }
@@ -53,7 +53,7 @@ public class LoginRepository {
 
     // Elimina un login por su ID, validando que exista
     public void eliminarLogin(int idLogin) {
-        Login loginEncontrado = buscarPorIdLogin(idLogin);
+        Autenticacion loginEncontrado = buscarPorIdLogin(idLogin);
         if (loginEncontrado == null) {
             throw new IllegalArgumentException("No se puede eliminar porque no existe un login con ID " + idLogin);
         }

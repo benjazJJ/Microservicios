@@ -5,32 +5,32 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import Servicio.Microservicio.de.Autenticacion9.Model.Login;
-import Servicio.Microservicio.de.Autenticacion9.Repository.LoginRepository;
+import Servicio.Microservicio.de.Autenticacion9.Model.Autenticacion;
+import Servicio.Microservicio.de.Autenticacion9.Repository.AutenticacionRepository;
 
 @Service
-public class LoginService {
+public class AutenticacionService {
 
     @Autowired
-    private LoginRepository loginRepository;
+    private AutenticacionRepository loginRepository;
 
     // Devuelve todos los Usuarios
-    public List<Login> getLogins() {
+    public List<Autenticacion> getLogins() {
         return loginRepository.obtenerLogins();
     }
 
     // Guarda un nuevo usuario
-    public Login saveLogin(Login login) {
+    public Autenticacion saveLogin(Autenticacion login) {
         return loginRepository.guardarLogin(login);
     }
 
     // Busca un login por su ID
-    public Login getLoginID(int idLogin) {
+    public Autenticacion getLoginID(int idLogin) {
         return loginRepository.buscarPorIdLogin(idLogin);
     }
 
     // Actualiza un login existente
-    public Login updateLogin(Login login) {
+    public Autenticacion updateLogin(Autenticacion login) {
         return loginRepository.actualizarLogin(login);
     }
 

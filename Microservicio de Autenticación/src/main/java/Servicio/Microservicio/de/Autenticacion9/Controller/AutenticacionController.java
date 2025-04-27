@@ -12,37 +12,37 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import Servicio.Microservicio.de.Autenticacion9.Model.Login;
-import Servicio.Microservicio.de.Autenticacion9.Service.LoginService;
+import Servicio.Microservicio.de.Autenticacion9.Model.Autenticacion;
+import Servicio.Microservicio.de.Autenticacion9.Service.AutenticacionService;
 
 @RestController
-@RequestMapping("/api/v1/login")
-public class LoginController {
+@RequestMapping("/api/v1/autenticacion")
+public class AutenticacionController {
 
     @Autowired
-    private LoginService loginService;
+    private AutenticacionService loginService;
 
     // Obtener todos los usuarios
     @GetMapping
-    public List<Login> listarLogins() {
+    public List<Autenticacion> listarLogins() {
         return loginService.getLogins();
     }
 
     // Agregar un nuevo contenido
     @PostMapping
-    public Login agregarUsuario(@RequestBody Login login){
+    public Autenticacion agregarUsuario(@RequestBody Autenticacion login){
         return loginService.saveLogin(login);
     }
 
     // Buscar un login por ID
     @GetMapping("/{id}")
-    public Login buscarLogin(@PathVariable int id) {
+    public Autenticacion buscarLogin(@PathVariable int id) {
         return loginService.getLoginID(id);
     }
 
     // Actualizar un Usuario
     @PutMapping("/{id}")
-    public Login actualizarLogin(@PathVariable int id, @RequestBody Login login) {
+    public Autenticacion actualizarLogin(@PathVariable int id, @RequestBody Autenticacion login) {
         login.setIdLogin(id);
         return loginService.updateLogin(login);
     }
