@@ -1,25 +1,42 @@
 package Servicio.Microservicio.de.Administracion.de.Contenidos.y.Multimedia4.Model;
 
-import java.sql.Date;
-
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-//LES DEJO LOS COMENTARIOS PARA QUE SEPAN QUE HACE CADA COSA
-// BY: Benjamín Palma
+import java.sql.Date;
 
-@Data // Lombok: genera getters, setters, toString, equals y hashCode automáticamente
-@NoArgsConstructor // Lombok: genera un constructor vacío
-@AllArgsConstructor // Lombok: genera un constructor con todos los atributos
-
+@Entity // Indica que esta clase será una tabla en la base de datos
+@Table(name = "multimedia") // Nombre de la tabla
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Multimedia {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Autoincremental
+    @Column(name = "id_multimedia")
     private int idMultimedia; // ID único del anuncio o publicación
-    private String titulo; // Título del anuncio (ej: "Nueva colección de libros 2025")
-    private String descripcion; // Descripción detallada del anuncio o noticia
-    private String urlImagen; // URL de imagen principal relacionada (opcional)
-    private String urlVideo; // URL de video relacionado (opcional)
-    private Date fechaPublicacion; // Fecha en la que se publica el anuncio
-    private Date fechaExpiracion; // Fecha en la que deja de mostrarse (opcional)
-    private String tipoPublicacion; // Tipo de publicación (evento, promoción, aviso general)
+
+    @Column(name = "titulo", nullable = false, length = 100)
+    private String titulo; // Título del anuncio
+
+    @Column(name = "descripcion", length = 255)
+    private String descripcion; // Descripción detallada del anuncio
+
+    @Column(name = "url_imagen", length = 255)
+    private String urlImagen; // URL de imagen principal
+
+    @Column(name = "url_video", length = 255)
+    private String urlVideo; // URL de video relacionado
+
+    @Column(name = "fecha_publicacion", nullable = false)
+    private Date fechaPublicacion; // Fecha de publicación
+
+    @Column(name = "fecha_expiracion")
+    private Date fechaExpiracion; // Fecha en la que deja de mostrarse
+
+    @Column(name = "tipo_publicacion", length = 50)
+    private String tipoPublicacion; // Tipo de publicación (evento, aviso, promoción)
 }

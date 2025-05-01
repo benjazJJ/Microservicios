@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MultimediaService {
@@ -13,29 +14,35 @@ public class MultimediaService {
     @Autowired
     private MultimediaRepository multimediaRepository;
 
-    // Devuelve todas las publicaciones multimedia
+    // Obtener todas las publicaciones
     public List<Multimedia> getMultimedias() {
-        return multimediaRepository.obtenerMultimedias();
+        return multimediaRepository.findAll();
     }
 
-    // Guarda una nueva publicación
+    // Guardar nueva publicación
     public Multimedia saveMultimedia(Multimedia multimedia) {
-        return multimediaRepository.guardar(multimedia);
+        return multimediaRepository.save(multimedia);
     }
 
-    // Busca una publicación por su ID
+    // Buscar publicación por ID
     public Multimedia getMultimediaId(int idMultimedia) {
-        return multimediaRepository.buscarPorId(idMultimedia);
+        Optional<Multimedia> multimedia = multimediaRepository.findById(idMultimedia);
+        return multimedia.orElse(null);
     }
 
-    // Actualiza una publicación existente
+    // Actualizar publicación
     public Multimedia updateMultimedia(Multimedia multimedia) {
-        return multimediaRepository.actualizar(multimedia);
+        return multimediaRepository.save(multimedia);
     }
 
-    // Elimina una publicación por su ID
+    // Eliminar publicación
     public String deleteMultimedia(int idMultimedia) {
-        multimediaRepository.eliminar(idMultimedia);
-        return "Publicación eliminada correctamente";
+        if (multimediaRepository.existsById(idMultimedia)) {
+            multimediaRepository.deleteById(idMultimedia);
+            return "Publicación eliminada correctamente";
+        } else {
+            return "Publicación no encontrada";
+        }
     }
 }
+

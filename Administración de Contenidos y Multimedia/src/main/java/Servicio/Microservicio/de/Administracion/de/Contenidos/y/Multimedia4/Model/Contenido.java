@@ -1,25 +1,41 @@
 package Servicio.Microservicio.de.Administracion.de.Contenidos.y.Multimedia4.Model;
 
-import java.sql.Date;
-
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-//LES DEJO LOS COMENTARIOS PARA QUE SEPAN QUE HACE CADA COSA
-// BY: Benjamín Palma
+import java.sql.Date;
 
-@Data // Lombok: genera getters, setters, toString, equals y hashCode automáticamente
-@NoArgsConstructor // Lombok: genera un constructor vacío
-@AllArgsConstructor // Lombok: genera un constructor con todos los atributos
-
+@Entity // Indica que esta clase es una entidad JPA
+@Table(name = "contenido") // Nombre de la tabla en la base de datos
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Contenido {
-    private int idContenido; // ID único del contenido
-    private String nombreArchivo; // Nombre del archivo subido (ej: "Reglamento_Biblioteca.pdf")
-    private String tipoArchivo; // Tipo del archivo (pdf, jpg, mp4, etc.)
-    private String urlArchivo; // URL o ruta donde está almacenado el archivo (interna o externa)
-    private Date fechaSubida; // Fecha en la que el archivo fue subido
-    private String descripcion; // Descripción breve del contenido
-    private String visibilidad; // Público, restringido, solo docentes, etc.
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // ID autoincremental en MySQL
+    @Column(name = "id_contenido")
+    private int idContenido;
+
+    @Column(name = "nombre_archivo", nullable = false, length = 100)
+    private String nombreArchivo; // Nombre del archivo subido
+
+    @Column(name = "tipo_archivo", nullable = false, length = 20)
+    private String tipoArchivo; // Tipo del archivo (pdf, jpg, etc.)
+
+    @Column(name = "url_archivo", nullable = false, length = 255)
+    private String urlArchivo; // Ruta o URL donde está almacenado
+
+    @Column(name = "fecha_subida", nullable = false)
+    private Date fechaSubida; // Fecha de subida
+
+    @Column(name = "descripcion", length = 255)
+    private String descripcion; // Descripción del contenido
+
+    @Column(name = "visibilidad", length = 50)
+    private String visibilidad; // Nivel de visibilidad (público, privado, etc.)
 }
+
 

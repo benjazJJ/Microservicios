@@ -3,6 +3,8 @@ package Servicio.Microservicio.de.Administracion.de.Contenidos.y.Multimedia4.Con
 import Servicio.Microservicio.de.Administracion.de.Contenidos.y.Multimedia4.Model.Contenido;
 import Servicio.Microservicio.de.Administracion.de.Contenidos.y.Multimedia4.Service.ContenidoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,34 +16,46 @@ public class ContenidoController {
     @Autowired
     private ContenidoService contenidoService;
 
-    // Obtener todos los contenidos
     @GetMapping
-    public List<Contenido> listarContenidos() {
-        return contenidoService.getContenidos();
+    public ResponseEntity<List<Contenido>> listarContenidos() {
+        List<Contenido> contenidos = contenidoService.getContenidos();
+        if (contenidos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(contenidos);
     }
 
-    // Agregar un nuevo contenido
     @PostMapping
-    public Contenido agregarContenido(@RequestBody Contenido contenido) {
-        return contenidoService.saveContenido(contenido);
+    public ResponseEntity<Contenido> agregarContenido(@RequestBody Contenido contenido) {
+        Contenido nuevo = contenidoService.saveContenido(contenido);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nuevo);
     }
 
-    // Buscar un contenido por ID
     @GetMapping("/{id}")
-    public Contenido buscarContenido(@PathVariable int id) {
-        return contenidoService.getContenidoId(id);
+    public ResponseEntity<Contenido> buscarContenido(@PathVariable int id) {
+        Contenido contenido = contenidoService.getContenidoId(id);
+        if (contenido != null) {
+            return ResponseEntity.ok(contenido);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    // Actualizar un contenido
     @PutMapping("/{id}")
-    public Contenido actualizarContenido(@PathVariable int id, @RequestBody Contenido contenido) {
+    public ResponseEntity<Contenido> actualizarContenido(@PathVariable int id, @RequestBody Contenido contenido) {
         contenido.setIdContenido(id);
-        return contenidoService.updateContenido(contenido);
+        Contenido actualizado = contenidoService.updateContenido(contenido);
+        return ResponseEntity.ok(actualizado);
     }
 
-    // Eliminar un contenido
     @DeleteMapping("/{id}")
-    public String eliminarContenido(@PathVariable int id) {
-        return contenidoService.deleteContenido(id);
+    public ResponseEntity<String> eliminarContenido(@PathVariable int id) {
+        String mensaje = contenidoService.deleteContenido(id);
+        if (mensaje.contains("correctamente")) {
+            return ResponseEntity.ok(mensaje);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mensaje);
+        }
     }
 }
+

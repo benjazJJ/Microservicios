@@ -12,7 +12,6 @@ public class LoginService {
 
     // Valida las credenciales de inicio de sesión
     public boolean validarCredenciales(String correo, String contrasena) {
-        return loginRepository.validarLogin(correo, contrasena);
+        return loginRepository.findByCorreoAndContrasena(correo, contrasena).isPresent();
     }
 }
-

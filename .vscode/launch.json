@@ -2,6 +2,41 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Application",
+            "request": "launch",
+            "mainClass": "Servicio.Microservicio.de.Inicio.de.Sesion8.Application",
+            "projectName": "Microservicio-de-Inicio-de-Sesion-8"
+        },
+        {
+            "type": "java",
+            "name": "Application",
+            "request": "launch",
+            "mainClass": "Servicio.Microservicio.de.Autenticacion9.Application",
+            "projectName": "Microservicio-de-Autenticacion-9"
+        },
+        {
+            "type": "java",
+            "name": "Application",
+            "request": "launch",
+            "mainClass": "servicio.microservicio.gestion.usuarios.Application",
+            "projectName": "Microservicio-de-Gestion-de-Usuarios-1"
+        },
+        {
+            "type": "java",
+            "name": "Application",
+            "request": "launch",
+            "mainClass": "Servicio.Microservicio.de.Catalogo.de.Libros2.Application",
+            "projectName": "Microservicio-de-Catalogo-de-Libros-2"
+        },
+        {
+            "type": "java",
+            "name": "Application",
+            "request": "launch",
+            "mainClass": "Servicio.Microservicio.de.Administracion.de.Contenidos.y.Multimedia4.Application",
+            "projectName": "Microservicio-de-Administracion-de-Contenidos-y-Multimedia-4"
+        },
+        {
+            "type": "java",
             "name": "Spring Boot-Application<Microservicio-de-Prestamos-5>",
             "request": "launch",
             "cwd": "${workspaceFolder}",

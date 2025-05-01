@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ContenidoService {
@@ -13,29 +14,35 @@ public class ContenidoService {
     @Autowired
     private ContenidoRepository contenidoRepository;
 
-    // Devuelve todos los contenidos
+    // Obtener todos los contenidos
     public List<Contenido> getContenidos() {
-        return contenidoRepository.obtenerContenidos();
+        return contenidoRepository.findAll();
     }
 
-    // Guarda un nuevo contenido
+    // Guardar un nuevo contenido
     public Contenido saveContenido(Contenido contenido) {
-        return contenidoRepository.guardar(contenido);
+        return contenidoRepository.save(contenido);
     }
 
-    // Busca un contenido por su ID
+    // Buscar contenido por ID
     public Contenido getContenidoId(int idContenido) {
-        return contenidoRepository.buscarPorId(idContenido);
+        Optional<Contenido> contenido = contenidoRepository.findById(idContenido);
+        return contenido.orElse(null); // Devuelve null si no existe
     }
 
-    // Actualiza un contenido existente
+    // Actualizar contenido (usa save, si existe actualiza, si no, crea uno nuevo)
     public Contenido updateContenido(Contenido contenido) {
-        return contenidoRepository.actualizar(contenido);
+        return contenidoRepository.save(contenido);
     }
 
-    // Elimina un contenido por su ID
+    // Eliminar contenido por ID
     public String deleteContenido(int idContenido) {
-        contenidoRepository.eliminar(idContenido);
-        return "Contenido eliminado correctamente";
+        if (contenidoRepository.existsById(idContenido)) {
+            contenidoRepository.deleteById(idContenido);
+            return "Contenido eliminado correctamente";
+        } else {
+            return "Contenido no encontrado";
+        }
     }
 }
+

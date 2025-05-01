@@ -1,12 +1,11 @@
 package Servicio.Microservicio.de.Autenticacion9.Service;
 
-import java.util.List;
-
+import Servicio.Microservicio.de.Autenticacion9.Model.Autenticacion;
+import Servicio.Microservicio.de.Autenticacion9.Repository.AutenticacionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import Servicio.Microservicio.de.Autenticacion9.Model.Autenticacion;
-import Servicio.Microservicio.de.Autenticacion9.Repository.AutenticacionRepository;
+import java.util.List;
 
 @Service
 public class AutenticacionService {
@@ -14,30 +13,38 @@ public class AutenticacionService {
     @Autowired
     private AutenticacionRepository loginRepository;
 
-    // Devuelve todos los Usuarios
+    // Obtener todos los logins
     public List<Autenticacion> getLogins() {
-        return loginRepository.obtenerLogins();
+        return loginRepository.findAll();
     }
 
-    // Guarda un nuevo usuario
+    // Guardar un nuevo login
     public Autenticacion saveLogin(Autenticacion login) {
-        return loginRepository.guardarLogin(login);
+        return loginRepository.save(login);
     }
 
-    // Busca un login por su ID
-    public Autenticacion getLoginID(int idLogin) {
-        return loginRepository.buscarPorIdLogin(idLogin);
+    // Buscar login por ID
+    public Autenticacion getLoginById(int idLogin) {
+        return loginRepository.findById(idLogin).orElse(null);
     }
 
-    // Actualiza un login existente
+    // Validar correo y contraseña (para inicio de sesión)
+    public boolean validarCredenciales(String correo, String contrasena) {
+        return loginRepository.findByCorreoAndContrasena(correo, contrasena).isPresent();
+    }
+
+    // Actualizar login
     public Autenticacion updateLogin(Autenticacion login) {
-        return loginRepository.actualizarLogin(login);
+        return loginRepository.save(login);
     }
 
-    // Elimina un login por su ID
+    // Eliminar login por ID
     public String deleteLogin(int idLogin) {
-        loginRepository.eliminarLogin(idLogin);
-        return "Login eliminado correctamente";
+        if (loginRepository.existsById(idLogin)) {
+            loginRepository.deleteById(idLogin);
+            return "Login eliminado correctamente";
+        } else {
+            return "Login no encontrado";
+        }
     }
-
 }
