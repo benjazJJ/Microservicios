@@ -14,22 +14,15 @@ public class AutenticacionController {
     @Autowired
     private AutenticacionService loginService;
 
-    // Obtener todos los usuarios registrados
+    // POST que guarda las credenciales enviadas desde Inicio de Sesión
+    @PostMapping
+    public Autenticacion recibirLogin(@RequestBody Autenticacion login) {
+        return loginService.saveLogin(login);
+    }
+
+    // GET para ver lo que ya se guardó
     @GetMapping
     public List<Autenticacion> listarLogins() {
         return loginService.getLogins();
     }
-
-    // Agregar un nuevo usuario
-    @PostMapping
-    public Autenticacion agregarUsuario(@RequestBody Autenticacion login) {
-        return loginService.saveLogin(login);
-    }
-
-    // Validar correo y contraseña (para Inicio de Sesión)
-    @PostMapping("/validar")
-    public boolean validarLogin(@RequestBody Autenticacion login) {
-        return loginService.validarCredenciales(login.getCorreo(), login.getContrasena());
-    }
 }
-
