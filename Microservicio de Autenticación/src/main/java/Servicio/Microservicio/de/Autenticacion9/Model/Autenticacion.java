@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "carrito")
+@Table(name = "autenticacion")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,12 +14,12 @@ public class Autenticacion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_carrito")
-    private int id_carrito;
+    @Column(name = "id_login")
+    private int idLogin;
 
     @Column(nullable = false, unique = true, length = 100)
-    private int idLibro;
+    private String correo;
 
     @Column(nullable = false, length = 100)
-    private int cantidad;
+    private String contrasena;
 }
