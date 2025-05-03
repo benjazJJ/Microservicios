@@ -4,8 +4,8 @@
             "type": "java",
             "name": "Application",
             "request": "launch",
-            "mainClass": "Servicio.Microservicio.de.Devolucion6.Application",
-            "projectName": "Microservicio-de-Devolucion-6"
+            "mainClass": "Servicio.Microservicio.de.Notificaciones7.Application",
+            "projectName": "Microservicio-de-Notificaciones-7"
         },
         {
             "type": "java",
@@ -51,6 +51,13 @@
             "projectName": "Microservicio-de-Prestamos-5",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Application",
+            "request": "launch",
+            "mainClass": "Servicio.Microservicio.de.Devolucion6.Application",
+            "projectName": "Microservicio-de-Devolucion-6"
         }
     ]
 }
