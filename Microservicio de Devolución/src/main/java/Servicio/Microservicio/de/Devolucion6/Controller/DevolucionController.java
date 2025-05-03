@@ -75,6 +75,9 @@ public class DevolucionController {
         try {
             //Verifico si el paciente existe
             Devolucion devolucion2 = devolucionService.buscarDevolucionPorID(id);
+            if (devolucion2== null) {
+                return ResponseEntity.notFound().build();
+            }
             //Si existe el paciente modifico sus valores
             devolucion2.setIdDevolucion(id);
             devolucion2.setIdLibro(id);
