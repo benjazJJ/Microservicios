@@ -3,6 +3,8 @@ package Servicio.Microservicio.de.Devolucion6.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,34 +24,75 @@ public class DevolucionController {
     @Autowired
     private DevolucionService devolucionService;
 
-    // Obtener todas las devoluciones
     @GetMapping
-    public List<Devolucion> listarDevoluciones() {
-        return devolucionService.getDevoluciones();
+    public ResponseEntity<List<Devolucion>> listar(){
+        //Guardar en una lista nueva los elementos
+        List<Devolucion> devolucion = devolucionService.listarDevoluciones();
+        if(devolucion.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(devolucion);
     }
 
-    // Agregar una nueva devolución
+    //metodo para guardar un Devolucion
     @PostMapping
-    public Devolucion agregarDevolucion(@RequestBody Devolucion devolucion) {
-        return devolucionService.saveDevolucion(devolucion);
+    public ResponseEntity<Devolucion> guardarDevolucion(@RequestBody Devolucion devolucion){
+        //creamos un objeto nuevo
+        Devolucion dev = devolucionService.saveDevolucion(devolucion);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dev);
     }
 
-    // Buscar una devolución por ID
+    //Metodo para buscar Devolucion por Id
     @GetMapping("/{id}")
-    public Devolucion buscarDevolucion(@PathVariable int id) {
-        return devolucionService.getDevolucionID(id);
+    public ResponseEntity<Devolucion> buscarDevolucionPorId(@PathVariable Integer id){
+        try {
+            //Verificar si el Devolucion existe
+            Devolucion dev = devolucionService.buscarDevolucionPorID(id);
+            return ResponseEntity.ok(dev);
+        } catch (Exception e) {
+            // Si no lo encuentra envio codigo not found
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    // Actualizar una devolución
-    @PutMapping("/{id}")
-    public Devolucion actualizarDevolucion(@PathVariable int id, @RequestBody Devolucion devolucion) {
-        devolucion.setIdDevolucion(id);
-        return devolucionService.updateDevolucion(devolucion);
-    }
-
-    // Eliminar una devolución
+    //Metodo para eliminar
     @DeleteMapping("/{id}")
-    public String eliminarDevolucion(@PathVariable int id) {
-        return devolucionService.deleteDevolucion(id);
+    public ResponseEntity<?> borrarDevolucion(@PathVariable int id){
+        try {
+            //Verificar si la devolucion existe
+            Devolucion dev = devolucionService.buscarDevolucionPorID(id);
+            devolucionService.borrarDevolucion(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            // No existe la devolucion
+            return ResponseEntity.notFound().build();
+        }
     }
+
+    //Metodo para actualizar una devolucion por su id
+    @PutMapping("/{id}")
+    public ResponseEntity<Devolucion> actualizarDevolucionPorID(@PathVariable Integer id, @RequestBody Devolucion dev){
+        try {
+            //Verifico si el paciente existe
+            Devolucion devolucion2 = devolucionService.buscarDevolucionPorID(id);
+            //Si existe el paciente modifico sus valores
+            devolucion2.setIdDevolucion(id);
+            devolucion2.setIdLibro(id);
+            devolucion2.setIdUsuario(id);
+            devolucion2.setFechaDevolucion(dev.getFechaDevolucion());
+            devolucion2.setEstadoLibro(dev.getEstadoLibro());
+            devolucion2.setObservaciones(dev.getObservaciones());
+
+            //Actualizar Registro
+            devolucionService.saveDevolucion(devolucion2);
+            return ResponseEntity.ok(devolucion2);
+
+        } catch (Exception e) {
+            // Si no encuentra la devolucion
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+
 }

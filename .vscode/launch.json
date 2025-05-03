@@ -4,6 +4,13 @@
             "type": "java",
             "name": "Application",
             "request": "launch",
+            "mainClass": "Servicio.Microservicio.de.Devolucion6.Application",
+            "projectName": "Microservicio-de-Devolucion-6"
+        },
+        {
+            "type": "java",
+            "name": "Application",
+            "request": "launch",
             "mainClass": "Servicio.Microservicio.de.Inicio.de.Sesion8.Application",
             "projectName": "Microservicio-de-Inicio-de-Sesion-8"
         },
