@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "MicroservicioPrestamosApplication",
+            "request": "launch",
+            "mainClass": "Servicio.Microservicio.Prestamos.MicroservicioPrestamosApplication",
+            "projectName": "Microservicio-Prestamos"
+        },
+        {
+            "type": "java",
             "name": "DonacionesApplication",
             "request": "launch",
             "mainClass": "Servicio.Donaciones.DonacionesApplication",
