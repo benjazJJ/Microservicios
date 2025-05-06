@@ -19,8 +19,11 @@ public class PrestamoService {
     
     //Metodo para crear un nuevo Prestamo
     public Prestamo crearPrestamo(Prestamo prestamo) {
+        if (prestamo == null || prestamo.getRunSolicitante() == null) {
+        throw new IllegalArgumentException("Datos de préstamo inválidos");
+        }
         return prestamoRepository.save(prestamo);
-    }
+        }
 
     //Metodo para obtener todos los prestamos
     public List<Prestamo> obtenerTodosLosPrestamos() {
@@ -29,7 +32,7 @@ public class PrestamoService {
 
     //Metodo para obtener un prestamo por su id
     public Prestamo obtenerPrestamoPorId(Integer idPrestamo) {
-        return prestamoRepository.findByIdPrestamo(idPrestamo).orElse(null);
+        return prestamoRepository.findById(idPrestamo).orElse(null);
     }
 
     //Metodo para obtener un prestamo por el Run del solicitante

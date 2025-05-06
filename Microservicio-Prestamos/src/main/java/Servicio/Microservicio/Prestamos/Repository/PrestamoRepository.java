@@ -7,12 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import Servicio.Microservicio.Prestamos.Model.Prestamo;
+import io.micrometer.common.lang.NonNull;
 
 @Repository
 public interface PrestamoRepository extends JpaRepository<Prestamo, Integer> {
     
     //Buscamos un prestamo por su id
-    Optional<Prestamo> findByIdPrestamo(Integer idPrestamo);
+    Optional<Prestamo> findById(@NonNull Integer idPrestamo);
 
     //Buscamos los prestamos por el RUN del solicitante
     List<Prestamo> findByRunSolicitante(String runSolicitante);
