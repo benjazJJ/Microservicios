@@ -88,7 +88,7 @@ public class PrestamoController {
         }
         prestamoService.eliminarPrestamo(id);
         Map<String, String> response = new HashMap<>();
-        response.put("", "El préstamo se ha eliminado con éxito");
+        response.put("mensaje", "Prestamo eliminado con exito");
         return ResponseEntity.ok(response);
     }
 }
