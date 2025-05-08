@@ -87,8 +87,12 @@ public class PrestamoController {
             return ResponseEntity.notFound().build();
         }
         prestamoService.eliminarPrestamo(id);
+<<<<<<< HEAD
         Map<String, String> response = new HashMap<>();
         response.put("mensaje", "Prestamo eliminado con exito");
         return ResponseEntity.ok(response);
+=======
+        return ResponseEntity.ok("Préstamo eliminado correctamente.");
+>>>>>>> 8f936d5d08660769d1eec9fe0195141b0bebb319
     }
 }
