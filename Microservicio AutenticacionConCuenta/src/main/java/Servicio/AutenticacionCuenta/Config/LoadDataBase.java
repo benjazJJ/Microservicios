@@ -17,7 +17,8 @@ public class LoadDataBase {
                 userRepo.save(new Usuario(0, "admin@correo.com", "admin"));
                 System.out.println(">> Usuarios iniciales cargados en la base de datos.");
             } else {
-                System.out.println(">> Ya existen usuarios. No se insertaron nuevos.");
+                System.out.println(">> Estos usuarios ya existen en la base de datos.");
+                System.out.println(">> No pudieron añadir");
             }
         };
     }
