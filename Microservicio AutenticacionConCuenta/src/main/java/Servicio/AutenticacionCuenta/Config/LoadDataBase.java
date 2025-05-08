@@ -18,7 +18,6 @@ public class LoadDataBase {
                 System.out.println(">> Usuarios iniciales cargados en la base de datos.");
             } else {
                 System.out.println(">> Estos usuarios ya existen en la base de datos.");
-                System.out.println(">> No pudieron añadir");
             }
         };
     }
