@@ -82,7 +82,7 @@ public class PrestamoController {
 
     // Eliminar un préstamo
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> eliminarPrestamo(@PathVariable Integer id) {
+    public ResponseEntity<String> eliminarPrestamo(@PathVariable Integer id) {
         if (prestamoService.obtenerPrestamoPorId(id) == null) {
             return ResponseEntity.notFound().build();
         }

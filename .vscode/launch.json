@@ -2,6 +2,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "MicroservicioDeRolesYPermisosApplication",
+            "request": "launch",
+            "mainClass": "Microservicio.de.Control.de.roles.y.Permisos.Microservicio.de.roles.y.permisos.MicroservicioDeRolesYPermisosApplication",
+            "projectName": "Microservicio-de-roles-y-permisos"
+        },
+        {
+            "type": "java",
+            "name": "ComentariosYResenasApplication",
+            "request": "launch",
+            "mainClass": "Servicio.Comentarios.y.Resenas.ComentariosYResenasApplication",
+            "projectName": "Comentarios-y-Resenas"
+        },
+        {
+            "type": "java",
             "name": "MicroservicioPrestamosApplication",
             "request": "launch",
             "mainClass": "Servicio.Microservicio.Prestamos.MicroservicioPrestamosApplication",
