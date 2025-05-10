@@ -2,11 +2,11 @@
     "configurations": [
         {
             "type": "java",
-            "name": "MicroservicioLogisticaYStockApplication",
-            "request": "launch",
-            "mainClass": "com.example.Microservicio.logistica.y.stock.MicroservicioLogisticaYStockApplication",
-            "projectName": "Microservicio-logistica-y-stock"
-        },
+    "name": "MicroservicioLogisticaYStockApplication",
+    "request": "launch",
+    "mainClass": "com.example.Microservicio.logistica.y.stock.MicroservicioLogisticaYStockApplication",
+    "projectName": "Microservicio-logistica-y-stock"
+},
         {
             "type": "java",
             "name": "MicroservicioDeRolesYPermisosApplication",
