@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "MicroservicioLogisticaYStockApplication",
+            "request": "launch",
+            "mainClass": "com.example.Microservicio.logistica.y.stock.MicroservicioLogisticaYStockApplication",
+            "projectName": "Microservicio-logistica-y-stock"
+        },
+        {
+            "type": "java",
             "name": "MicroservicioDeRolesYPermisosApplication",
             "request": "launch",
             "mainClass": "Microservicio.de.Control.de.roles.y.Permisos.Microservicio.de.roles.y.permisos.MicroservicioDeRolesYPermisosApplication",
