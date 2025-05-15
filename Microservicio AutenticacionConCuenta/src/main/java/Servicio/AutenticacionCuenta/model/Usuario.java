@@ -22,4 +22,18 @@ public class Usuario {
 
     @Column(name = "contrasena", nullable = false, length = 200)
     private String contrasena;
+
+    @Column(name = "nombre", nullable = false, length = 100)
+    private String nombre;
+
+    @Column(name = "telefono", length = 20)
+    private String telefono;
+
+    @Column(name = "rut", nullable = false, unique = true, length = 12)
+    private String rut;
+    
+    @Column(name = "rol", nullable = false, length = 50)
+    private String rol; // Puede ser "Docente", "Estudiante", etc.
+
+
 }
