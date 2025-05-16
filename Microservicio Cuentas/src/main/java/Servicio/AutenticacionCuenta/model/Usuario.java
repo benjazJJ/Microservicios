@@ -33,7 +33,5 @@ public class Usuario {
     private String rut;
     
     @Column(name = "rol", nullable = false, length = 50)
-    private String rol; // Puede ser "Docente", "Estudiante", etc.
-
-
+    private String rol; // Puede ser "Docente", "Estudiante"
 }
