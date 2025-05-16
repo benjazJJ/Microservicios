@@ -2,11 +2,18 @@
     "configurations": [
         {
             "type": "java",
-    "name": "MicroservicioLogisticaYStockApplication",
-    "request": "launch",
-    "mainClass": "com.example.Microservicio.logistica.y.stock.MicroservicioLogisticaYStockApplication",
-    "projectName": "Microservicio-logistica-y-stock"
-},
+            "name": "AutenticacionCuentaApplication",
+            "request": "launch",
+            "mainClass": "Servicio.AutenticacionCuenta.AutenticacionCuentaApplication",
+            "projectName": "AutenticacionCuenta"
+        },
+        {
+            "type": "java",
+            "name": "MicroservicioLogisticaYStockApplication",
+            "request": "launch",
+            "mainClass": "com.example.Microservicio.logistica.y.stock.MicroservicioLogisticaYStockApplication",
+            "projectName": "Microservicio-logistica-y-stock"
+        },
         {
             "type": "java",
             "name": "MicroservicioDeRolesYPermisosApplication",
