@@ -1,11 +1,15 @@
 package com.sugerencias.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "sugerencias_mejora")
 public class SugerenciaMejora {
@@ -24,3 +28,4 @@ public class SugerenciaMejora {
     @Column(name = "fecha_envio")
     private LocalDateTime fechaEnvio;
 }
+
