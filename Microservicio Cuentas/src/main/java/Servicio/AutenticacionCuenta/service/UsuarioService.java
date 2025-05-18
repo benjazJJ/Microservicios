@@ -19,6 +19,10 @@ public class UsuarioService {
             throw new IllegalStateException("Ya existe una cuenta con este correo.");
         }
 
+        if (usuarioRepository.findByRut(usuario.getRut()).isPresent()) {
+            throw new IllegalStateException("Ya existe una cuenta con este RUT.");
+        }
+
         String encriptada = Encriptador.encriptar(usuario.getContrasena());
         usuario.setContrasena(encriptada);
         return usuarioRepository.save(usuario);
@@ -28,7 +32,6 @@ public class UsuarioService {
     public boolean autenticar(String correo, String contrasena) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findByCorreo(correo);
         return usuarioOpt.isPresent() &&
-               Encriptador.comparar(contrasena, usuarioOpt.get().getContrasena());
+                Encriptador.comparar(contrasena, usuarioOpt.get().getContrasena());
     }
 }
-
