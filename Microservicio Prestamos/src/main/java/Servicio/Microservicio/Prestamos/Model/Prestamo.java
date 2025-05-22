@@ -42,8 +42,5 @@ public class Prestamo {
     private int cantidadDias;
 
     @Column(nullable = false)
-    private int multas = 0;
-
-    @Column(nullable = false)
     private Long LibroId;
 }

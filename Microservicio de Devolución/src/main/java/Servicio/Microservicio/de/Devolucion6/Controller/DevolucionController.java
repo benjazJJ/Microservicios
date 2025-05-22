@@ -34,12 +34,16 @@ public class DevolucionController {
         return ResponseEntity.ok(devolucion);
     }
 
-    //metodo para guardar un Devolucion
+    // crear una nueva devolucion
     @PostMapping
-    public ResponseEntity<Devolucion> guardarDevolucion(@RequestBody Devolucion devolucion){
-        //creamos un objeto nuevo
-        Devolucion dev = devolucionService.saveDevolucion(devolucion);
-        return ResponseEntity.status(HttpStatus.CREATED).body(dev);
+    public ResponseEntity<?> crearnuevaDevolucion(@RequestBody Devolucion nuevaDevolucion){
+        try {
+            Devolucion devolucion = devolucionService.crearDevolucion(nuevaDevolucion);
+            return ResponseEntity.status(201).body(devolucion);
+        } catch (RuntimeException e) {
+            // TODO: handle exception
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 
     //Metodo para buscar Devolucion por Id
@@ -87,7 +91,7 @@ public class DevolucionController {
             devolucion2.setObservaciones(dev.getObservaciones());
 
             //Actualizar Registro
-            devolucionService.saveDevolucion(devolucion2);
+            devolucionService.crearDevolucion(devolucion2);
             return ResponseEntity.ok(devolucion2);
 
         } catch (Exception e) {
