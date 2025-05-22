@@ -18,7 +18,7 @@ import com.example.Microservicio.logistica.y.stock.Model.LibroStock;
 import com.example.Microservicio.logistica.y.stock.Repository.LibroStockRepository;
 
 @RestController
-@RequestMapping("/librostock")
+@RequestMapping("/api/v1/librostock")
 public class LibroStockController {
     @Autowired
     private LibroStockRepository libroStockRepository;

@@ -1,12 +1,14 @@
 package Servicio.Microservicio.Prestamos.Service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import Servicio.Microservicio.Prestamos.Model.Prestamo;
 import Servicio.Microservicio.Prestamos.Repository.PrestamoRepository;
+import Servicio.Microservicio.Prestamos.webclient.PedidoPed;
 
 @Service
 public class PrestamoService {
@@ -16,14 +18,21 @@ public class PrestamoService {
     
     @Autowired
     private PrestamoRepository prestamoRepository;
-    
+
+    @Autowired
+    private PedidoPed PedidoPed;
+
     //Metodo para crear un nuevo Prestamo
     public Prestamo crearPrestamo(Prestamo prestamo) {
-        if (prestamo == null || prestamo.getRunSolicitante() == null) {
-        throw new IllegalArgumentException("Datos de préstamo inválidos");
+        //verificar si el Libro existe consultando al microservicio Logistica y stock
+        Map<String,Object> Libro = PedidoPed.getLibroById(prestamo.getLibroId());
+        //verifico si me trajo el Libro o no
+        if(Libro == null || Libro.isEmpty()){
+            throw new RuntimeException("Libro no encontrado. No se puede agregar el prestamo");
         }
         return prestamoRepository.save(prestamo);
-        }
+        
+    }
 
     //Metodo para obtener todos los prestamos
     public List<Prestamo> obtenerTodosLosPrestamos() {

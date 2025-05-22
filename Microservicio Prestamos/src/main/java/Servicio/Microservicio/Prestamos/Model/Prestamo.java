@@ -43,4 +43,7 @@ public class Prestamo {
 
     @Column(nullable = false)
     private int multas = 0;
+
+    @Column(nullable = false)
+    private Long LibroId;
 }

@@ -27,10 +27,16 @@ public class PrestamoController {
 
     // crear un nuevo prestamo
     @PostMapping
-    public ResponseEntity<Prestamo> crearPrestamo(@RequestBody Prestamo prestamo) {
-        Prestamo nuevoPrestamo = prestamoService.crearPrestamo(prestamo);
-        return ResponseEntity.status(201).body(nuevoPrestamo);
+    public ResponseEntity<?> crearPrestamo(@RequestBody Prestamo nuevoPrestamo){
+        try {
+            Prestamo prestamo = prestamoService.crearPrestamo(nuevoPrestamo);
+            return ResponseEntity.status(201).body(prestamo);
+        } catch (RuntimeException e) {
+            // TODO: handle exception
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
+    
 
     // obtener todos los prestamos
     @GetMapping
