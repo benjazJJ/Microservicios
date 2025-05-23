@@ -1,10 +1,10 @@
-package com.example.Microservicio.logistica.y.stock;
+package com.example.Microservicio.de.Stock;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MicroservicioLogisticaYStockApplicationTests {
+class MicroservicioDeStockApplicationTests {
 
 	@Test
 	void contextLoads() {

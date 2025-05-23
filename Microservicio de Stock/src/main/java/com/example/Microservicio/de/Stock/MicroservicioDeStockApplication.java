@@ -1,13 +1,13 @@
-package com.example.Microservicio.logistica.y.stock;
+package com.example.Microservicio.de.Stock;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MicroservicioLogisticaYStockApplication {
+public class MicroservicioDeStockApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MicroservicioLogisticaYStockApplication.class, args);
+		SpringApplication.run(MicroservicioDeStockApplication.class, args);
 	}
 
 }
