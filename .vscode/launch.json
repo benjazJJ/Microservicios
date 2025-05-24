@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "MicroservicioMultasApplication",
+            "request": "launch",
+            "mainClass": "com.example.Microservicio.Multas.MicroservicioMultasApplication",
+            "projectName": "Microservicio-Multas"
+        },
+        {
+            "type": "java",
             "name": "MultasApplication",
             "request": "launch",
             "mainClass": "Servicio.Multas.MultasApplication",
