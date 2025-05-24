@@ -37,7 +37,4 @@ public class Prestamo {
 
     @Column(nullable = true)
     private Date fechaEntrega;
-
-    @Column(nullable = false)
-    private int cantidadDias;
 }

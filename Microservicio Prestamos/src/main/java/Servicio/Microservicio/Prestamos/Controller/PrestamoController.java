@@ -52,28 +52,6 @@ public class PrestamoController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // obtener prestamos por run
-    @GetMapping("/run/{run}")
-    public ResponseEntity<List<Prestamo>> obtenerPrestamosPorRun(@PathVariable String run) {
-        List<Prestamo> prestamos = prestamoService.obtenerPrestamosPorRun(run);
-        if (prestamos.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok(prestamos);
-        }
-    }
-
-    // obtener prestamos pendientes (sin fecha de entrega)
-    @GetMapping("/pendientes")
-    public ResponseEntity<List<Prestamo>> obtenerPrestamosPendientes() {
-        List<Prestamo> pendientes = prestamoService.obtenerPrestamoPendientes();
-        if (pendientes.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok(pendientes);
-        }
-    }
-
     // actualizar un prestamo
     @PutMapping("/{id}")
     public ResponseEntity<Prestamo> actualizarPrestamo(@PathVariable Integer id, @RequestBody Prestamo prestamo){
