@@ -27,7 +27,7 @@ public class Prestamo {
     private Integer idPrestamo;
 
     @Column(nullable = false)
-    private int idLibro;
+    private Long idLibro;
 
     @Column(unique = true, length = 12, nullable = false)
     private String runSolicitante;
@@ -40,7 +40,4 @@ public class Prestamo {
 
     @Column(nullable = false)
     private int cantidadDias;
-
-    @Column(nullable = false)
-    private Long LibroId;
 }
