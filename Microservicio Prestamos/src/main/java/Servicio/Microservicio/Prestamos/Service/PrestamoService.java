@@ -24,14 +24,24 @@ public class PrestamoService {
 
     //Metodo para crear un nuevo Prestamo
     public Prestamo crearPrestamo(Prestamo prestamo) {
-        //verificar si el Libro existe consultando al microservicio Logistica y stock
-        Map<String,Object> Libro = PedidoPed.getLibroById(prestamo.getIdLibro());
-        //verifico si me trajo el Libro o no
-        if(Libro == null || Libro.isEmpty()){
-            throw new RuntimeException("Libro no encontrado. No se puede agregar el prestamo");
+        // Consultar libro por ID
+        Map<String,Object> libro = PedidoPed.getLibroById(prestamo.getIdLibro());
+
+        // Verificar si el libro existe
+        if (libro == null || libro.isEmpty()) {
+            throw new RuntimeException("Libro no encontrado. No se puede agregar el préstamo.");
         }
+
+        // Obtener cantidad y validar
+        Object cantidadObj = libro.get("cantidad");
+        int cantidad = Integer.parseInt(cantidadObj.toString());
+
+        if (cantidad < 1) {
+            throw new RuntimeException("El libro no está disponible. No hay stock suficiente.");
+        }
+
+        // Guardar el préstamo
         return prestamoRepository.save(prestamo);
-        
     }
 
     //Metodo para obtener todos los prestamos

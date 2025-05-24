@@ -26,5 +26,4 @@ public class PedidoPed {
         .map(body -> new RuntimeException("Libro no encontrado")))
         .bodyToMono(Map.class).block();
     }
-
 }
