@@ -25,7 +25,7 @@ public class PrestamoService {
     //Metodo para crear un nuevo Prestamo
     public Prestamo crearPrestamo(Prestamo prestamo) {
         //verificar si el Libro existe consultando al microservicio Logistica y stock
-        Map<String,Object> Libro = PedidoPed.getLibroById(prestamo.getLibroId());
+        Map<String,Object> Libro = PedidoPed.getLibroById(prestamo.getIdLibro());
         //verifico si me trajo el Libro o no
         if(Libro == null || Libro.isEmpty()){
             throw new RuntimeException("Libro no encontrado. No se puede agregar el prestamo");
