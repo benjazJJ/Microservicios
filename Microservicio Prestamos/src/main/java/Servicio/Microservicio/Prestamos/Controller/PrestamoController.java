@@ -32,7 +32,6 @@ public class PrestamoController {
             Prestamo prestamo = prestamoService.crearPrestamo(nuevoPrestamo);
             return ResponseEntity.status(201).body(prestamo);
         } catch (RuntimeException e) {
-            // TODO: handle exception
             return ResponseEntity.status(404).body(e.getMessage());
         }
     }
