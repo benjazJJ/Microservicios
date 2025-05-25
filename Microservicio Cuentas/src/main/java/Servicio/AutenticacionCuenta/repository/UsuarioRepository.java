@@ -9,4 +9,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     Optional<Usuario> findByRut(String rut);
 
+    Optional<Usuario> findById(Integer id);
+
 }

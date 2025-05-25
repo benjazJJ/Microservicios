@@ -34,4 +34,9 @@ public class UsuarioService {
         return usuarioOpt.isPresent() &&
                 Encriptador.comparar(contrasena, usuarioOpt.get().getContrasena());
     }
+
+    public Usuario obtenerPorId(int id) {
+        return usuarioRepository.findById(id).orElse(null);
+    }
+
 }

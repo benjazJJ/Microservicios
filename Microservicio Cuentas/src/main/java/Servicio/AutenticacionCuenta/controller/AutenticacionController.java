@@ -14,7 +14,7 @@ public class AutenticacionController {
     private UsuarioService usuarioService;
 
     // Endpoint de login activo
-    //verifica si las credenciales son válidas.
+    // verifica si las credenciales son válidas.
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Usuario usuario) {
         boolean autenticado = usuarioService.autenticar(usuario.getCorreo(), usuario.getContrasena());
@@ -30,7 +30,20 @@ public class AutenticacionController {
             Usuario nuevo = usuarioService.registrar(usuario);
             return ResponseEntity.ok(nuevo);
         } catch (IllegalStateException e) {
-            return ResponseEntity.status(409).body(e.getMessage()); // 409 mostramos que hubo conflicto en la creación de cuenta
+            return ResponseEntity.status(409).body(e.getMessage()); // 409 mostramos que hubo conflicto en la creación
+                                                                    // de cuenta
         }
     }
+
+    // Consultar usuario por ID
+    @GetMapping("/usuario/{id}")
+    public ResponseEntity<?> obtenerUsuarioPorId(@PathVariable int id) {
+        Usuario usuario = usuarioService.obtenerPorId(id);
+        if (usuario != null) {
+            return ResponseEntity.ok(usuario);
+        } else {
+            return ResponseEntity.status(404).body("Usuario no encontrado");
+        }
+    }
+
 }

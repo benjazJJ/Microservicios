@@ -9,21 +9,27 @@ import org.springframework.stereotype.Service;
 import Servicio.Microservicio.Prestamos.Model.Prestamo;
 import Servicio.Microservicio.Prestamos.Repository.PrestamoRepository;
 import Servicio.Microservicio.Prestamos.webclient.PedidoPed;
+import Servicio.Microservicio.Prestamos.webclient.CuentasClient;
 
 @Service
 public class PrestamoService {
 
-    // Aquí puedes implementar la lógica de negocio relacionada con los préstamos.
-    // Por ejemplo, métodos para crear, leer, actualizar y eliminar préstamos.
-    
     @Autowired
     private PrestamoRepository prestamoRepository;
 
     @Autowired
     private PedidoPed PedidoPed;
 
+    @Autowired
+    private CuentasClient cuentasClient;
+
     //Metodo para crear un nuevo Prestamo
     public Prestamo crearPrestamo(Prestamo prestamo) {
+        // Validar que el usuario exista en el microservicio Cuentas
+        if (!cuentasClient.validarUsuarioPorId(prestamo.getIdUsuario())) {
+            throw new RuntimeException("El usuario con ID " + prestamo.getIdUsuario() + " no existe en el sistema de cuentas.");
+        }
+
         // Consultar libro por ID
         Map<String,Object> libro = PedidoPed.getLibroById(prestamo.getIdLibro());
 
@@ -73,5 +79,5 @@ public class PrestamoService {
     public void eliminarPrestamo(Integer idPrestamo){
         prestamoRepository.deleteById(idPrestamo);
     }
-
 }
+
