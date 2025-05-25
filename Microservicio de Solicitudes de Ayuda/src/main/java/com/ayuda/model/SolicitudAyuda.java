@@ -3,6 +3,7 @@ package com.ayuda.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 
 @Data
@@ -25,5 +26,5 @@ public class SolicitudAyuda {
     private String mensaje;
 
     @Column(name = "fecha_envio")
-    private LocalDateTime fechaEnvio;
+    private Date fechaEnvio;
 }

@@ -5,6 +5,7 @@ import com.ayuda.repository.SolicitudAyudaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +17,7 @@ public class SolicitudAyudaService {
     private SolicitudAyudaRepository repository;
 
     public SolicitudAyuda crear(SolicitudAyuda solicitud) {
-        solicitud.setFechaEnvio(LocalDateTime.now());
+        solicitud.setFechaEnvio(Date.valueOf(java.time.LocalDate.now()));
         return repository.save(solicitud);
     }
 
