@@ -23,7 +23,7 @@ public class Multa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;//Id de la multa
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 12)
     private String runUsuario; //RUN del usuario //Fecha de fin de la multa
 
     @Column(nullable = false, length = 100)
