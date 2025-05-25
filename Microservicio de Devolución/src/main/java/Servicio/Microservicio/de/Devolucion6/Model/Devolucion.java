@@ -20,6 +20,7 @@ import jakarta.persistence.Table;
 public class Devolucion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, unique = true)
     private Integer idDevolucion;         // ID único de la devolución
 
     @Column( nullable = false)
@@ -31,6 +32,6 @@ public class Devolucion {
     @Column(nullable = true, length = 100)
     private String observaciones;     // Comentarios adicionales sobre la devolución
 
-    @Column(nullable = false)
-    private Long idPrestamo;      // ID del préstamo asociado a la devolución
+    @Column(name = "id_prestamo", nullable = false)
+    private Integer idPrestamo;
 }

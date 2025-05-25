@@ -16,7 +16,7 @@ public class DevolucionDev {
     }
 
     //Metodo para realizar la consulta getmaping
-    public Map<String, Object> getPrestamoById(Long idPrestamo){
+    public Map<String, Object> getPrestamoById(Integer idPrestamo){
         return this.webClient.get()
         .uri("/{id}",idPrestamo)
         .retrieve()
