@@ -37,8 +37,14 @@ public class MultaController {
     }
 
     @PostMapping
-    public ResponseEntity<Multa> crear(@RequestBody Multa multa) {
-        return ResponseEntity.ok(multaService.crearMulta(multa));
+    public ResponseEntity<?> crearnuevaMulta(@RequestBody Multa nuevaMulta){
+        try {
+            Multa multa = multaService.crearMulta(nuevaMulta);
+            return ResponseEntity.status(201).body(multa);
+        } catch (RuntimeException e) {
+            // TODO: handle exception
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
@@ -55,18 +61,5 @@ public class MultaController {
                 : ResponseEntity.notFound().build();
     }
 
-    // Endpoint adicional para asignar multas automáticamente
-    @PostMapping("/asignar")
-    public ResponseEntity<?> asignarMulta(@RequestBody Map<String, String> datos) {
-        try {
-            String runUsuario = datos.get("runUsuario");
-            LocalDate fechaEsperada = LocalDate.parse(datos.get("fechaEsperada"));
-            LocalDate fechaReal = LocalDate.parse(datos.get("fechaReal"));
-
-            Multa multa = multaService.asignarMultaAutomatica(runUsuario, fechaEsperada, fechaReal);
-            return ResponseEntity.ok(multa);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
+    
 }

@@ -24,14 +24,14 @@ public class Multa {
     private Long id;//Id de la multa
 
     @Column(nullable = false, length = 10)
-    private String runUsuario; //RUN del usuario
-
-    @Column(nullable = false)
-    private LocalDate fechaInicio; //Fecha de inicio de la multa
-
-    @Column(nullable = false)
-    private LocalDate fechaFin; //Fecha de fin de la multa
+    private String runUsuario; //RUN del usuario //Fecha de fin de la multa
 
     @Column(nullable = false, length = 100)
-    private String motivo; //Motivo de la multa
+    private String tipoSancion; //Tipo de sanción
+
+    @Column(nullable = false, length = 100)
+    private String sancion; //Sanción impuesta
+
+    @Column(name = "id_Devolucion", nullable = false)
+    private Integer idDevolucion;
 }

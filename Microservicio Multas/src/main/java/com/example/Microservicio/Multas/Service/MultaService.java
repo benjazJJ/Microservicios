@@ -1,8 +1,7 @@
 package com.example.Microservicio.Multas.Service;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +9,15 @@ import org.springframework.stereotype.Service;
 
 import com.example.Microservicio.Multas.Model.Multa;
 import com.example.Microservicio.Multas.Repository.MultaRepository;
+import com.example.Microservicio.Multas.WebClient.MultasMult;
 
 @Service
 public class MultaService {
     @Autowired
     private MultaRepository multaRepository;
+
+    @Autowired
+    private MultasMult multasMult;
 
     public List<Multa> obtenerTodasLasMultas() {
         return multaRepository.findAll();
@@ -25,15 +28,20 @@ public class MultaService {
     }
 
     public Multa crearMulta(Multa multa) {
+        // verificar si el prestamo existe consultando al microservicio Prestamo
+        Map<String, Object> mult = multasMult.getDevolucionById(multa.getIdDevolucion());
+        // verifico si me trajo el Prestamo o no
+        if (mult == null || mult.isEmpty()) {
+            throw new RuntimeException("Prestamo no encontrado. No se puede agregar la devolucion");
+        }
         return multaRepository.save(multa);
     }
 
     public Optional<Multa> actualizarMulta(Long id, Multa multaActualizada) {
         return multaRepository.findById(id).map(multa -> {
             multa.setRunUsuario(multaActualizada.getRunUsuario());
-            multa.setFechaInicio(multaActualizada.getFechaInicio());
-            multa.setFechaFin(multaActualizada.getFechaFin());
-            multa.setMotivo(multaActualizada.getMotivo());
+            multa.setTipoSancion(multaActualizada.getTipoSancion());
+            multa.setSancion(multaActualizada.getSancion());
             return multaRepository.save(multa);
         });
     }
@@ -46,33 +54,8 @@ public class MultaService {
         return false;
     }
 
-    //asignar multa automática según días de atraso
-    public Multa asignarMultaAutomatica(String runUsuario, LocalDate fechaEsperada, LocalDate fechaReal) {
-        long diasRetraso = ChronoUnit.DAYS.between(fechaEsperada, fechaReal);
-        if (diasRetraso <= 0) {
-            throw new IllegalArgumentException("No hay atraso para aplicar una multa");
-        }
+    
 
-        String motivo;
-        int diasSancion;
 
-        if (diasRetraso <= 3) {
-            motivo = "Retraso leve: suspensión de 3 días";
-            diasSancion = 3;
-        } else if (diasRetraso <= 7) {
-            motivo = "Retraso moderado: suspensión de 7 días";
-            diasSancion = 7;
-        } else {
-            motivo = "Retraso grave: suspensión de 15 días";
-            diasSancion = 15;
-        }
-
-        Multa multa = new Multa();
-        multa.setRunUsuario(runUsuario);
-        multa.setFechaInicio(LocalDate.now());
-        multa.setFechaFin(LocalDate.now().plusDays(diasSancion));
-        multa.setMotivo(motivo);
-
-        return multaRepository.save(multa);
-    }
+    
 }
