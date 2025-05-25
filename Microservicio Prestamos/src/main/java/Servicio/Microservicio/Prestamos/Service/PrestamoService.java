@@ -26,9 +26,7 @@ public class PrestamoService {
     //Metodo para crear un nuevo Prestamo
     public Prestamo crearPrestamo(Prestamo prestamo) {
         // Validar que el usuario exista en el microservicio Cuentas
-        if (!cuentasClient.validarUsuarioPorId(prestamo.getIdUsuario())) {
-            throw new RuntimeException("El usuario con ID " + prestamo.getIdUsuario() + " no existe en el sistema de cuentas.");
-        }
+        
 
         // Consultar libro por ID
         Map<String,Object> libro = PedidoPed.getLibroById(prestamo.getIdLibro());
