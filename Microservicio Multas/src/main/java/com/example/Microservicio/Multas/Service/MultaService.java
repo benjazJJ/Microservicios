@@ -31,8 +31,6 @@ public class MultaService {
     public Optional<Multa> actualizarMulta(Long id, Multa multaActualizada) {
         return multaRepository.findById(id).map(multa -> {
             multa.setRunUsuario(multaActualizada.getRunUsuario());
-            multa.setFechaInicio(multaActualizada.getFechaInicio());
-            multa.setFechaFin(multaActualizada.getFechaFin());
             multa.setMotivo(multaActualizada.getMotivo());
             return multaRepository.save(multa);
         });
@@ -69,8 +67,6 @@ public class MultaService {
 
         Multa multa = new Multa();
         multa.setRunUsuario(runUsuario);
-        multa.setFechaInicio(LocalDate.now());
-        multa.setFechaFin(LocalDate.now().plusDays(diasSancion));
         multa.setMotivo(motivo);
 
         return multaRepository.save(multa);
