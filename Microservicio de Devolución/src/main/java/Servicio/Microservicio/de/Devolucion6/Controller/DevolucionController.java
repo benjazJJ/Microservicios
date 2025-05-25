@@ -3,7 +3,6 @@ package Servicio.Microservicio.de.Devolucion6.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,10 +23,11 @@ public class DevolucionController {
     @Autowired
     private DevolucionService devolucionService;
 
+    //método para obtener todos las devoluciones
     @GetMapping
     public ResponseEntity<List<Devolucion>> listar(){
-        //Guardar en una lista nueva los elementos
-        List<Devolucion> devolucion = devolucionService.listarDevoluciones();
+        //guardar en una lista nueva los elementos
+        List<Devolucion> devolucion= devolucionService.listarDevoluciones();
         if(devolucion.isEmpty()){
             return ResponseEntity.noContent().build();
         }

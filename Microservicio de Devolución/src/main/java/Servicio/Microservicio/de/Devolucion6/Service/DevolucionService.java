@@ -27,8 +27,8 @@ public class DevolucionService {
     }
 
     // Busca una devolución por su ID
-    public Devolucion buscarDevolucionPorID(int idDevolucion) {
-        return devolucionRepository.findById(idDevolucion).get();
+    public Devolucion buscarDevolucionPorID(Integer id) {
+        return devolucionRepository.findById(id).get();
     }
 
     //funcion para guardar una devolucion
@@ -44,7 +44,7 @@ public class DevolucionService {
     }
 
     // Elimina una devolución por su ID
-    public void borrarDevolucion(int idDevolucion){
+    public void borrarDevolucion(Integer idDevolucion){
         devolucionRepository.deleteById(idDevolucion);
     }
 }
