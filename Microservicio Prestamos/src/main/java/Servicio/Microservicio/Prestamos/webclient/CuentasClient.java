@@ -19,11 +19,13 @@ public class CuentasClient {
             webClient.get()
                     .uri("/usuario/" + idUsuario)
                     .retrieve()
+                    .onStatus(status -> status.is4xxClientError(),
+                        response -> Mono.error(new RuntimeException("No existe un usuario con el ID: " + idUsuario)))
                     .bodyToMono(Void.class)
                     .block();
             return true;
         } catch (Exception e) {
-            throw new RuntimeException("Ya existe un usuario con el ID " + idUsuario);
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -32,11 +34,13 @@ public class CuentasClient {
             webClient.get()
                     .uri("/usuario/rut/" + rut)
                     .retrieve()
+                    .onStatus(status -> status.is4xxClientError(),
+                        response -> Mono.error(new RuntimeException("No existe un usuario con el RUT: " + rut)))
                     .bodyToMono(Void.class)
                     .block();
             return true;
         } catch (Exception e) {
-            throw new RuntimeException("Ya existe un usuario con el RUT: " + rut);
+            throw new RuntimeException(e.getMessage());
         }
     }
 }

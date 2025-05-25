@@ -25,61 +25,62 @@ public class PrestamoService {
 
     // Metodo para crear un nuevo Prestamo
     public Prestamo crearPrestamo(Prestamo prestamo) {
-        // Validar que el usuario exista en el microservicio Cuentas
+        // 1. Validar que el usuario existe por ID
         if (!cuentasClient.validarUsuarioPorId(prestamo.getIdUsuario())) {
-            throw new RuntimeException("El usuario con ID " + prestamo.getIdUsuario() + " no existe en el sistema.");
+            throw new RuntimeException("No existe un usuario con el ID: " + prestamo.getIdUsuario());
         }
 
+        // 2. Validar que el usuario existe por RUT
         if (!cuentasClient.validarUsuarioPorRut(prestamo.getRunSolicitante())) {
-            throw new RuntimeException("El usuario con RUT " + prestamo.getRunSolicitante() + " no existe.");
+            throw new RuntimeException("No existe un usuario con el RUT: " + prestamo.getRunSolicitante());
         }
 
-        // Consultar libro por ID
+        // 3. Validar si ya tiene préstamo por ID
+        if (prestamoRepository.existsByIdUsuario(prestamo.getIdUsuario())) {
+            throw new RuntimeException("Ya existe un préstamo asignado al ID de usuario: " + prestamo.getIdUsuario());
+        }
+
+        // 4. Validar si ya tiene préstamo por RUT
+        if (prestamoRepository.existsByRunSolicitante(prestamo.getRunSolicitante())) {
+            throw new RuntimeException("Ya existe un préstamo asignado al RUT: " + prestamo.getRunSolicitante());
+        }
+
+        // 5. Verificar que el libro exista
         Map<String, Object> libro = PedidoPed.getLibroById(prestamo.getIdLibro());
 
-        // Verificar si el libro existe
         if (libro == null || libro.isEmpty()) {
-            throw new RuntimeException("Libro no encontrado. No se puede agregar el préstamo.");
+            throw new RuntimeException("Libro no encontrado. No se puede registrar el préstamo.");
         }
 
-        // Obtener cantidad y validar
-        Object cantidadObj = libro.get("cantidad");
-        int cantidad = Integer.parseInt(cantidadObj.toString());
-
+        // 6. Verificar stock
+        int cantidad = Integer.parseInt(libro.get("cantidad").toString());
         if (cantidad < 1) {
             throw new RuntimeException("El libro no está disponible. No hay stock suficiente.");
         }
 
-        // Guardar el préstamo
         return prestamoRepository.save(prestamo);
     }
 
-    // Metodo para obtener todos los prestamos
     public List<Prestamo> obtenerTodosLosPrestamos() {
         return prestamoRepository.findAll();
     }
 
-    // Metodo para obtener un prestamo por su id
     public Prestamo obtenerPrestamoPorId(Integer idPrestamo) {
         return prestamoRepository.findById(idPrestamo).orElse(null);
     }
 
-    // Metodo para obtener un prestamo por el Run del solicitante
     public List<Prestamo> obtenerPrestamosPorRun(String runSolicitante) {
         return prestamoRepository.findByRunSolicitante(runSolicitante);
     }
 
-    // Metodo para obtener un prestamo pendiente (Sin fecha de entrega)
     public List<Prestamo> obtenerPrestamoPendientes() {
         return prestamoRepository.findByFechaEntregaIsNull();
     }
 
-    // Metodo para actualizar un prestamo existente
     public Prestamo actualizarPrestamo(Prestamo prestamo) {
         return prestamoRepository.save(prestamo);
     }
 
-    // Metodo para eliminar un prestamo por su ID
     public void eliminarPrestamo(Integer idPrestamo) {
         prestamoRepository.deleteById(idPrestamo);
     }

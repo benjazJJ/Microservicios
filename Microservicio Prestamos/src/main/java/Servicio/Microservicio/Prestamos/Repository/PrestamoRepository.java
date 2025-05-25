@@ -23,4 +23,8 @@ public interface PrestamoRepository extends JpaRepository<Prestamo, Integer> {
 
     //Buscamos prestamos que aun no se han entregado(fechaEntrega es null)
     List<Prestamo> findByFechaEntregaIsNull();
+
+    boolean existsByIdUsuario(Integer idUsuario);
+    boolean existsByRunSolicitante(String runSolicitante);
+
 }
