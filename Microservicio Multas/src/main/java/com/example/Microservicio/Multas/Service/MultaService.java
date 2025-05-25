@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.Microservicio.Multas.Model.Multa;
 import com.example.Microservicio.Multas.Repository.MultaRepository;
+import com.example.Microservicio.Multas.WebClient.MultasClient;
 import com.example.Microservicio.Multas.WebClient.MultasMult;
 
 @Service
@@ -19,6 +20,9 @@ public class MultaService {
     @Autowired
     private MultasMult multasMult;
 
+    @Autowired
+    private MultasClient multasClient;
+
     public List<Multa> obtenerTodasLasMultas() {
         return multaRepository.findAll();
     }
@@ -28,12 +32,18 @@ public class MultaService {
     }
 
     public Multa crearMulta(Multa multa) {
-        // verificar si el prestamo existe consultando al microservicio Prestamo
-        Map<String, Object> mult = multasMult.getDevolucionById(multa.getIdDevolucion());
-        // verifico si me trajo el Prestamo o no
-        if (mult == null || mult.isEmpty()) {
-            throw new RuntimeException("Prestamo no encontrado. No se puede agregar la devolucion");
+        // Validar que el runUsuario exista en Cuentas
+        if (!multasClient.validarUsuarioPorRut(multa.getRunUsuario())) {
+            throw new RuntimeException(
+                    "No se puede asignar la multa porque el usuario con RUT " + multa.getRunUsuario() + " no existe.");
         }
+
+        // Verificar si la devolución existe (por idDevolucion)
+        Map<String, Object> mult = multasMult.getDevolucionById(multa.getIdDevolucion());
+        if (mult == null || mult.isEmpty()) {
+            throw new RuntimeException("Devolución no encontrada. No se puede asignar la multa.");
+        }
+
         return multaRepository.save(multa);
     }
 
@@ -53,9 +63,4 @@ public class MultaService {
         }
         return false;
     }
-
-    
-
-
-    
 }
