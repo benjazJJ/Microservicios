@@ -22,10 +22,6 @@ public class Devolucion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_devolucion")
     private int idDevolucion;         // ID único de la devolución
-    @Column(name = "id_usuario", nullable = false)
-    private int idUsuario;            // ID del usuario que devuelve el libro
-    @Column(name= "id_libro", nullable = false)
-    private int idLibro;              // ID del libro devuelto
     @Column(name= "fecha_devolucion", nullable = false)
     private Date fechaDevolucion;     // Fecha en que se devolvió el libro
     @Column(name= "estado_libro", nullable = false, length = 100) 

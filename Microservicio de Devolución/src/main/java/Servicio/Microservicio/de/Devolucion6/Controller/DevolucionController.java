@@ -84,8 +84,6 @@ public class DevolucionController {
             }
             //Si existe el paciente modifico sus valores
             devolucion2.setIdDevolucion(id);
-            devolucion2.setIdLibro(id);
-            devolucion2.setIdUsuario(id);
             devolucion2.setFechaDevolucion(dev.getFechaDevolucion());
             devolucion2.setEstadoLibro(dev.getEstadoLibro());
             devolucion2.setObservaciones(dev.getObservaciones());
