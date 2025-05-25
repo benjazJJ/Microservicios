@@ -17,13 +17,26 @@ public class CuentasClient {
     public boolean validarUsuarioPorId(Integer idUsuario) {
         try {
             webClient.get()
-                .uri("/usuario/" + idUsuario)
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();
+                    .uri("/usuario/" + idUsuario)
+                    .retrieve()
+                    .bodyToMono(Void.class)
+                    .block();
             return true;
         } catch (Exception e) {
-            return false;
+            throw new RuntimeException("Ya existe un usuario con el ID " + idUsuario);
+        }
+    }
+
+    public boolean validarUsuarioPorRut(String rut) {
+        try {
+            webClient.get()
+                    .uri("/usuario/rut/" + rut)
+                    .retrieve()
+                    .bodyToMono(Void.class)
+                    .block();
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException("Ya existe un usuario con el RUT: " + rut);
         }
     }
 }

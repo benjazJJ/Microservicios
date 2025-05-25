@@ -39,4 +39,8 @@ public class UsuarioService {
         return usuarioRepository.findById(id).orElse(null);
     }
 
+    public Usuario obtenerPorRut(String rut) {
+        return usuarioRepository.findByRut(rut).orElse(null);
+    }
+
 }

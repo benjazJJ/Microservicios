@@ -29,6 +29,9 @@ public class Prestamo {
     @Column(nullable = false)
     private Long idLibro;
 
+    @Column(name = "id_usuario", nullable = false)
+    private Integer idUsuario;
+
     @Column(unique = true, length = 12, nullable = false)
     private String runSolicitante;
 

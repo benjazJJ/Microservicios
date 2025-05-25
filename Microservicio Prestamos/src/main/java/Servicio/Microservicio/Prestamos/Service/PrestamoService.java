@@ -23,13 +23,19 @@ public class PrestamoService {
     @Autowired
     private CuentasClient cuentasClient;
 
-    //Metodo para crear un nuevo Prestamo
+    // Metodo para crear un nuevo Prestamo
     public Prestamo crearPrestamo(Prestamo prestamo) {
         // Validar que el usuario exista en el microservicio Cuentas
-        
+        if (!cuentasClient.validarUsuarioPorId(prestamo.getIdUsuario())) {
+            throw new RuntimeException("El usuario con ID " + prestamo.getIdUsuario() + " no existe en el sistema.");
+        }
+
+        if (!cuentasClient.validarUsuarioPorRut(prestamo.getRunSolicitante())) {
+            throw new RuntimeException("El usuario con RUT " + prestamo.getRunSolicitante() + " no existe.");
+        }
 
         // Consultar libro por ID
-        Map<String,Object> libro = PedidoPed.getLibroById(prestamo.getIdLibro());
+        Map<String, Object> libro = PedidoPed.getLibroById(prestamo.getIdLibro());
 
         // Verificar si el libro existe
         if (libro == null || libro.isEmpty()) {
@@ -48,34 +54,33 @@ public class PrestamoService {
         return prestamoRepository.save(prestamo);
     }
 
-    //Metodo para obtener todos los prestamos
+    // Metodo para obtener todos los prestamos
     public List<Prestamo> obtenerTodosLosPrestamos() {
         return prestamoRepository.findAll();
     }
 
-    //Metodo para obtener un prestamo por su id
+    // Metodo para obtener un prestamo por su id
     public Prestamo obtenerPrestamoPorId(Integer idPrestamo) {
         return prestamoRepository.findById(idPrestamo).orElse(null);
     }
 
-    //Metodo para obtener un prestamo por el Run del solicitante
+    // Metodo para obtener un prestamo por el Run del solicitante
     public List<Prestamo> obtenerPrestamosPorRun(String runSolicitante) {
         return prestamoRepository.findByRunSolicitante(runSolicitante);
     }
 
-    //Metodo para obtener un prestamo pendiente (Sin fecha de entrega)
-    public List<Prestamo> obtenerPrestamoPendientes(){
+    // Metodo para obtener un prestamo pendiente (Sin fecha de entrega)
+    public List<Prestamo> obtenerPrestamoPendientes() {
         return prestamoRepository.findByFechaEntregaIsNull();
     }
 
-    //Metodo para actualizar un prestamo existente
-    public Prestamo actualizarPrestamo(Prestamo prestamo){
+    // Metodo para actualizar un prestamo existente
+    public Prestamo actualizarPrestamo(Prestamo prestamo) {
         return prestamoRepository.save(prestamo);
     }
 
-    //Metodo para eliminar un prestamo por su ID
-    public void eliminarPrestamo(Integer idPrestamo){
+    // Metodo para eliminar un prestamo por su ID
+    public void eliminarPrestamo(Integer idPrestamo) {
         prestamoRepository.deleteById(idPrestamo);
     }
 }
-

@@ -46,4 +46,15 @@ public class AutenticacionController {
         }
     }
 
+    // Consultar usuario por RUT
+    @GetMapping("/usuario/rut/{rut}")
+    public ResponseEntity<?> obtenerUsuarioPorRut(@PathVariable String rut) {
+        Usuario usuario = usuarioService.obtenerPorRut(rut);
+        if (usuario != null) {
+            return ResponseEntity.ok(usuario);
+        } else {
+            return ResponseEntity.status(404).body("Usuario no encontrado por RUT");
+        }
+    }
+
 }
