@@ -26,11 +26,11 @@ public class Prestamo {
     @Column(name = "id_prestamo", unique = true, nullable = false)
     private Integer idPrestamo;
 
+    @Column(name = "id_usuario", unique = true, nullable = false)
+    private Integer idUsuario;
+    
     @Column(nullable = false)
     private Long idLibro;
-
-    @Column(name = "id_usuario", nullable = false)
-    private Integer idUsuario;
 
     @Column(unique = true, length = 12, nullable = false)
     private String runSolicitante;

@@ -33,5 +33,5 @@ public class Devolucion {
     @Column(name= "observaciones", nullable = true, length = 100)
     private String observaciones;     // Comentarios adicionales sobre la devolución
     @Column(name= "id_prestamo", nullable = true, length = 100)
-    private Long idPrestamo;     // Comentarios adicionales sobre la devolución
+    private Long idPrestamo;      // ID del préstamo asociado a la devolución
 }
