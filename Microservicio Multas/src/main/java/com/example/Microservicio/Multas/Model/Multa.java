@@ -26,6 +26,12 @@ public class Multa {
     @Column(nullable = false, length = 10)
     private String runUsuario; //RUN del usuario
 
+    @Column(nullable = false)
+    private LocalDate fechaInicio; //Fecha de inicio de la multa
+
+    @Column(nullable = false)
+    private LocalDate fechaFin; //Fecha de fin de la multa
+
     @Column(nullable = false, length = 100)
     private String motivo; //Motivo de la multa
 }
