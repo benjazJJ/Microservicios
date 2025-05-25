@@ -2,6 +2,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "SugerenciaApplication",
+            "request": "launch",
+            "mainClass": "com.sugerencias.SugerenciaApplication",
+            "projectName": "Sugerencias-de-mejora"
+        },
+        {
+            "type": "java",
+            "name": "MicroservicioRecomendacionLecturaApplication",
+            "request": "launch",
+            "mainClass": "Servicio.Microservicio.Recomendacion.Lectura.MicroservicioRecomendacionLecturaApplication",
+            "projectName": "Microservicio-Recomendacion-Lectura"
+        },
+        {
+            "type": "java",
             "name": "EncuestaSatisfaccionApplication",
             "request": "launch",
             "mainClass": "com.encuesta.EncuestaSatisfaccionApplication",
