@@ -19,7 +19,7 @@ import com.example.Microservicio.Multas.Model.Multa;
 import com.example.Microservicio.Multas.Service.MultaService;
 
 @RestController
-@RequestMapping("/api/multas")
+@RequestMapping("/api/v1/multas")
 public class MultaController {
     @Autowired
     private MultaService multaService;
