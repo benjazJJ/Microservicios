@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "EncuestaSatisfaccionApplication",
+            "request": "launch",
+            "mainClass": "com.encuesta.EncuestaSatisfaccionApplication",
+            "projectName": "Microservicio-Encuesta-Satisfaccion"
+        },
+        {
+            "type": "java",
             "name": "MicroservicioMultasApplication",
             "request": "launch",
             "mainClass": "com.example.Microservicio.Multas.MicroservicioMultasApplication",

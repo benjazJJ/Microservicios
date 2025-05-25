@@ -5,6 +5,7 @@ import com.encuesta.repository.EncuestaSatisfaccionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +17,7 @@ public class EncuestaSatisfaccionService {
     private EncuestaSatisfaccionRepository repository;
 
     public EncuestaSatisfaccion crear(EncuestaSatisfaccion encuesta) {
-        encuesta.setFecha(LocalDateTime.now());
+        encuesta.setFecha(Date.valueOf(LocalDateTime.now().toLocalDate()));
         return repository.save(encuesta);
     }
 

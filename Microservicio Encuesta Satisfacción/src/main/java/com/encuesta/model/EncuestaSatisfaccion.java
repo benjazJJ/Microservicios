@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 
 @Data
@@ -33,5 +34,5 @@ public class EncuestaSatisfaccion {
     private String comentario;
 
     @Column(name = "fecha")
-    private LocalDateTime fecha;
+    private Date fecha;
 }
