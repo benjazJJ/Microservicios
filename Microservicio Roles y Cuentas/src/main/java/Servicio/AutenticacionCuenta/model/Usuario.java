@@ -31,7 +31,8 @@ public class Usuario {
 
     @Column(name = "rut", nullable = false, unique = true, length = 12)
     private String rut;
-    
-    @Column(name = "rol", nullable = false, length = 50)
-    private String rol; // Puede ser "Docente", "Estudiante"
+
+    @ManyToOne
+    @JoinColumn(name = "id_rol", nullable = false)
+    private Rol rol;
 }
