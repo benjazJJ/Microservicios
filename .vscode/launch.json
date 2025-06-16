@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "MicroservicioRolesYPermisosApplication",
+            "request": "launch",
+            "mainClass": "Microservicio.Microservicio.Roles.Y.Permisos.MicroservicioRolesYPermisosApplication",
+            "projectName": "Microservicio-Roles-Y-Permisos"
+        },
+        {
+            "type": "java",
             "name": "AutenticacionCuentaApplication",
             "request": "launch",
             "mainClass": "Servicio.AutenticacionCuenta.AutenticacionCuentaApplication",

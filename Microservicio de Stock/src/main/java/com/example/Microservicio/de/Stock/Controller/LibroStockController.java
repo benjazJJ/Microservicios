@@ -1,6 +1,7 @@
 package com.example.Microservicio.de.Stock.Controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +23,14 @@ import com.example.Microservicio.de.Stock.Repository.LibroStockRepository;
 public class LibroStockController {
     @Autowired
     private LibroStockRepository libroStockRepository;
-    
-    //Obtener los libros en stock
+
+    // Obtener los libros en stock
     @GetMapping
     public List<LibroStock> obtenerLibroStock() {
         return libroStockRepository.findAll();
     }
 
-    //Obtener libro por ID
+    // Obtener libro por ID
     @GetMapping("/{id}")
     public ResponseEntity<LibroStock> obtenerLibroPorId(@PathVariable Long id){
         Optional<LibroStock> libroStock = libroStockRepository.findById(id);
@@ -37,13 +38,13 @@ public class LibroStockController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    //Crear un nuevo registro de libro en stock
+    // Crear un nuevo registro de libro en stock
     @PostMapping
     public LibroStock crearLibroStock(@RequestBody LibroStock libroStock){
         return libroStockRepository.save(libroStock);
     }
 
-    //Actualizar un  libro existente 
+    // Actualizar un libro existente
     @PutMapping("/{id}")
     public ResponseEntity<LibroStock> actualizar(@PathVariable Long id, @RequestBody LibroStock libroActualizado) {
         return libroStockRepository.findById(id)
@@ -57,7 +58,7 @@ public class LibroStockController {
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
-    
+
     // Eliminar un libro por ID
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable Long id) {
@@ -67,5 +68,26 @@ public class LibroStockController {
         } else {
             return ResponseEntity.status(404).body("Libro no encontrado");
         }
+    }
+
+    // Nuevo endpoint: actualizar solo la cantidad del libro
+    @PutMapping("/actualizar-stock/{id}")
+    public ResponseEntity<?> actualizarCantidad(@PathVariable Long id, @RequestBody Map<String, Integer> datos) {
+        Optional<LibroStock> libroOpt = libroStockRepository.findById(id);
+
+        if (libroOpt.isEmpty()) {
+            return ResponseEntity.status(404).body("Libro no encontrado");
+        }
+
+        LibroStock libro = libroOpt.get();
+        int nuevaCantidad = datos.getOrDefault("cantidad", -1);
+
+        if (nuevaCantidad < 0) {
+            return ResponseEntity.badRequest().body("Cantidad inválida");
+        }
+
+        libro.setCantidad(nuevaCantidad);
+        libroStockRepository.save(libro);
+        return ResponseEntity.ok("Cantidad actualizada correctamente");
     }
 }

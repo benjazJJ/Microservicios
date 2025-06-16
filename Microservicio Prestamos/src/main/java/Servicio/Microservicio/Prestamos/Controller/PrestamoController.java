@@ -1,3 +1,4 @@
+// PrestamoController.java
 package Servicio.Microservicio.Prestamos.Controller;
 
 import java.util.HashMap;
@@ -22,20 +23,25 @@ import Servicio.Microservicio.Prestamos.Service.PrestamoService;
 @RestController
 @RequestMapping("/api/v1/prestamos")
 public class PrestamoController {
+
     @Autowired
     private PrestamoService prestamoService;
 
-    // crear un nuevo prestamo
+    // crear un nuevo prestamo validando correo, contraseña y rol
     @PostMapping
-    public ResponseEntity<?> crearPrestamo(@RequestBody Prestamo nuevoPrestamo){
+    public ResponseEntity<?> crearPrestamo(@RequestBody Map<String, Object> datos) {
         try {
-            Prestamo prestamo = prestamoService.crearPrestamo(nuevoPrestamo);
+            String correo = (String) datos.get("correo");
+            String contrasena = (String) datos.get("contrasena");
+
+            Prestamo prestamo = prestamoService.crearPrestamoSiEsValido(datos, correo, contrasena);
             return ResponseEntity.status(201).body(prestamo);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(401).body(e.getMessage());
         } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            return ResponseEntity.status(400).body(e.getMessage());
         }
     }
-    
 
     // obtener todos los prestamos
     @GetMapping
