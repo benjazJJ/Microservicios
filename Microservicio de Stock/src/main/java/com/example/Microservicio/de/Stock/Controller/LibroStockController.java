@@ -1,67 +1,85 @@
 package com.example.Microservicio.de.Stock.Controller;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import com.example.Microservicio.de.Stock.Model.EstadoLibro;
 import com.example.Microservicio.de.Stock.Model.LibroStock;
+import com.example.Microservicio.de.Stock.Repository.EstadoLibroRepository;
 import com.example.Microservicio.de.Stock.Repository.LibroStockRepository;
+import com.example.Microservicio.de.Stock.Service.LibroStockService;
+import com.example.Microservicio.de.Stock.Service.ValidacionResponse;
 
 @RestController
 @RequestMapping("/api/v1/librostock")
 public class LibroStockController {
+
     @Autowired
     private LibroStockRepository libroStockRepository;
 
-    // Obtener los libros en stock
-    @GetMapping
-    public List<LibroStock> obtenerLibroStock() {
-        return libroStockRepository.findAll();
+    @Autowired
+    private EstadoLibroRepository estadoLibroRepository;
+
+    @Autowired
+    private LibroStockService libroStockService;
+
+    private boolean noTienePermiso(ValidacionResponse validacion) {
+        return !validacion.isAutenticado() ||
+                validacion.getRol().equalsIgnoreCase("ESTUDIANTE") ||
+                validacion.getRol().equalsIgnoreCase("DOCENTE");
     }
 
-    // Obtener libro por ID
+    // GET público - ver todo el stock
+    @GetMapping
+    public ResponseEntity<List<LibroStock>> obtenerLibroStock() {
+        return ResponseEntity.ok(libroStockRepository.findAll());
+    }
+
+    // GET público - ver libro por ID
     @GetMapping("/{id}")
-    public ResponseEntity<LibroStock> obtenerLibroPorId(@PathVariable Long id){
+    public ResponseEntity<?> obtenerLibroPorId(@PathVariable Long id) {
         Optional<LibroStock> libroStock = libroStockRepository.findById(id);
         return libroStock.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                         .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Crear un nuevo registro de libro en stock
-    @PostMapping
-    public LibroStock crearLibroStock(@RequestBody LibroStock libroStock){
-        return libroStockRepository.save(libroStock);
+    @PostMapping("/crear")
+    public ResponseEntity<?> crearLibroStock(@RequestBody Map<String, Object> datos) {
+        String correo = datos.get("correo").toString();
+        String contrasena = datos.get("contrasena").toString();
+        ValidacionResponse validacion = libroStockService.validarUsuario(correo, contrasena);
+        if (noTienePermiso(validacion)) {
+            return ResponseEntity.status(403).body("Acceso denegado.");
+        }
+
+        LibroStock nuevoLibro = libroStockService.mapToLibroStock(datos);
+
+        // Buscar si ya existe un libro con ese nombre
+        Optional<LibroStock> libroExistenteOpt = libroStockRepository.findAll().stream()
+            .filter(l -> l.getNombreLibro().equalsIgnoreCase(nuevoLibro.getNombreLibro()))
+            .findFirst();
+
+        if (libroExistenteOpt.isPresent()) {
+            LibroStock existente = libroExistenteOpt.get();
+            existente.setCantidad(existente.getCantidad() + nuevoLibro.getCantidad());
+            return ResponseEntity.ok(libroStockRepository.save(existente));
+        } else {
+            return ResponseEntity.ok(libroStockRepository.save(nuevoLibro));
+        }
     }
 
-    // Actualizar un libro existente
-    @PutMapping("/{id}")
-    public ResponseEntity<LibroStock> actualizar(@PathVariable Long id, @RequestBody LibroStock libroActualizado) {
-        return libroStockRepository.findById(id)
-                .map(libro -> {
-                    libro.setNombreLibro(libroActualizado.getNombreLibro());
-                    libro.setEstante(libroActualizado.getEstante());
-                    libro.setFila(libroActualizado.getFila());
-                    libro.setCantidad(libroActualizado.getCantidad());
-                    libroStockRepository.save(libro);
-                    return ResponseEntity.ok(libro);
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    // Eliminar un libro por ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminar(@PathVariable Long id) {
+    public ResponseEntity<?> eliminar(@PathVariable Long id, @RequestBody Map<String, String> datos) {
+        ValidacionResponse validacion = libroStockService.validarUsuario(datos.get("correo"), datos.get("contrasena"));
+        if (noTienePermiso(validacion)) {
+            return ResponseEntity.status(403).body("Acceso denegado.");
+        }
+
         if (libroStockRepository.existsById(id)) {
             libroStockRepository.deleteById(id);
             return ResponseEntity.ok("Libro eliminado del stock");
@@ -70,24 +88,39 @@ public class LibroStockController {
         }
     }
 
-    // Nuevo endpoint: actualizar solo la cantidad del libro
     @PutMapping("/actualizar-stock/{id}")
-    public ResponseEntity<?> actualizarCantidad(@PathVariable Long id, @RequestBody Map<String, Integer> datos) {
-        Optional<LibroStock> libroOpt = libroStockRepository.findById(id);
+    public ResponseEntity<?> actualizarCantidad(@PathVariable Long id, @RequestBody Map<String, Object> datos) {
+        String correo = datos.get("correo").toString();
+        String contrasena = datos.get("contrasena").toString();
+        ValidacionResponse validacion = libroStockService.validarUsuario(correo, contrasena);
+        if (noTienePermiso(validacion)) {
+            return ResponseEntity.status(403).body("Acceso denegado.");
+        }
 
+        Optional<LibroStock> libroOpt = libroStockRepository.findById(id);
         if (libroOpt.isEmpty()) {
             return ResponseEntity.status(404).body("Libro no encontrado");
         }
 
         LibroStock libro = libroOpt.get();
-        int nuevaCantidad = datos.getOrDefault("cantidad", -1);
+        int nuevaCantidad = (int) datos.getOrDefault("cantidad", -1);
+        String nuevoEstado = datos.get("estado").toString();
 
         if (nuevaCantidad < 0) {
             return ResponseEntity.badRequest().body("Cantidad inválida");
         }
+        if (nuevoEstado == null || nuevoEstado.isEmpty()) {
+            return ResponseEntity.badRequest().body("Estado inválido");
+        }
+
+        EstadoLibro estado = estadoLibroRepository.findAll().stream()
+                .filter(e -> e.getNombreEstado().equalsIgnoreCase(nuevoEstado))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Estado '" + nuevoEstado + "' no encontrado"));
 
         libro.setCantidad(nuevaCantidad);
+        libro.setEstado(estado);
         libroStockRepository.save(libro);
-        return ResponseEntity.ok("Cantidad actualizada correctamente");
+        return ResponseEntity.ok("Cantidad y estado actualizados correctamente");
     }
 }

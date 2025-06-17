@@ -8,17 +8,12 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import Servicio.Microservicio.Prestamos.Model.Prestamo;
 import Servicio.Microservicio.Prestamos.Service.PrestamoService;
+import Servicio.Microservicio.Prestamos.Service.ValidacionResponse;
 
 @RestController
 @RequestMapping("/api/v1/prestamos")
@@ -43,14 +38,12 @@ public class PrestamoController {
         }
     }
 
-    // obtener todos los prestamos
     @GetMapping
     public ResponseEntity<List<Prestamo>> obtenerPrestamos() {
         List<Prestamo> prestamos = prestamoService.obtenerTodosLosPrestamos();
         return ResponseEntity.ok(prestamos);
     }
 
-    // obtener prestamos por id
     @GetMapping("/{id}")
     public ResponseEntity<Prestamo> obtenerPrestamoPorId(@PathVariable Integer id) {
         Optional<Prestamo> prestamoOpt = Optional.ofNullable(prestamoService.obtenerPrestamoPorId(id));
@@ -58,7 +51,6 @@ public class PrestamoController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // obtener prestamos por run
     @GetMapping("/run/{run}")
     public ResponseEntity<List<Prestamo>> obtenerPrestamosPorRun(@PathVariable String run) {
         List<Prestamo> prestamos = prestamoService.obtenerPrestamosPorRun(run);
@@ -69,7 +61,6 @@ public class PrestamoController {
         }
     }
 
-    // obtener prestamos pendientes (sin fecha de entrega)
     @GetMapping("/pendientes")
     public ResponseEntity<List<Prestamo>> obtenerPrestamosPendientes() {
         List<Prestamo> pendientes = prestamoService.obtenerPrestamoPendientes();
@@ -80,26 +71,49 @@ public class PrestamoController {
         }
     }
 
-    // actualizar un prestamo
     @PutMapping("/{id}")
-    public ResponseEntity<Prestamo> actualizarPrestamo(@PathVariable Integer id, @RequestBody Prestamo prestamo){
-        if(prestamoService.obtenerPrestamoPorId(id)==null ){
+    public ResponseEntity<Prestamo> actualizarPrestamo(@PathVariable Integer id, @RequestBody Prestamo prestamo) {
+        if (prestamoService.obtenerPrestamoPorId(id) == null) {
             return ResponseEntity.notFound().build();
-        } 
+        }
         prestamo.setIdPrestamo(id);
         Prestamo prestamoActualizado = prestamoService.actualizarPrestamo(prestamo);
         return ResponseEntity.ok(prestamoActualizado);
     }
 
-    // Eliminar un préstamo
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, String>> eliminarPrestamo(@PathVariable Integer id) {
+    @PostMapping("/eliminar/{id}")
+    public ResponseEntity<Map<String, String>> eliminarPrestamo(
+            @PathVariable Integer id,
+            @RequestBody Map<String, String> datos) {
+
+        String correo = datos.get("correo");
+        String contrasena = datos.get("contrasena");
+
+        WebClient client = WebClient.builder()
+                .baseUrl("http://localhost:8081")
+                .build();
+
+        ValidacionResponse validacion = client.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/api/v1/autenticacion/validar")
+                        .queryParam("correo", correo)
+                        .queryParam("contrasena", contrasena)
+                        .build())
+                .retrieve()
+                .bodyToMono(ValidacionResponse.class)
+                .block();
+
+        if (validacion == null || !validacion.autenticado || !validacion.rol.equalsIgnoreCase("ADMINISTRADOR")) {
+            return ResponseEntity.status(403)
+                    .body(Map.of("error", "Acceso denegado. Solo un administrador puede eliminar préstamos."));
+        }
+
         if (prestamoService.obtenerPrestamoPorId(id) == null) {
             return ResponseEntity.notFound().build();
         }
+
         prestamoService.eliminarPrestamo(id);
-        Map<String, String> response = new HashMap<>();
-        response.put("mensaje", "Prestamo eliminado con exito");
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(Map.of("mensaje", "Préstamo eliminado con éxito"));
     }
+
 }

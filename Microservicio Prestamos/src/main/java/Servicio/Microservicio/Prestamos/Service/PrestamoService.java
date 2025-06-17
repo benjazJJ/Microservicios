@@ -13,6 +13,8 @@ import Servicio.Microservicio.Prestamos.Model.Prestamo;
 import Servicio.Microservicio.Prestamos.Repository.PrestamoRepository;
 import Servicio.Microservicio.Prestamos.webclient.PedidoPed;
 import Servicio.Microservicio.Prestamos.webclient.CuentasClient;
+import Servicio.Microservicio.Prestamos.Service.PrestamoService.ValidacionResponse;
+
 
 @Service
 public class PrestamoService {
