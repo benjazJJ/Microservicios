@@ -17,8 +17,11 @@ public class RecomendacionesySugerencias {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_Encuesta")
-    private int idEncuesta;
+    @Column(name = "id_Encuesta", unique = true, nullable = false)
+    private Integer idEncuesta;
+
+    @Column(name = "id_usuario", unique = true, nullable = false)
+    private Integer idUsuario;
 
    @Column(name = "correo_usuario", nullable = false, length = 100)
     private String correo;

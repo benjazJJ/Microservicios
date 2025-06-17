@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "RecomendacionesYSugerenciasApplication",
+            "request": "launch",
+            "mainClass": "Microservicio.Recomendaciones.y.Sugerencias.RecomendacionesYSugerenciasApplication",
+            "projectName": "duoc"
+        },
+        {
+            "type": "java",
             "name": "MicroservicioRolesYPermisosApplication",
             "request": "launch",
             "mainClass": "Microservicio.Microservicio.Roles.Y.Permisos.MicroservicioRolesYPermisosApplication",
