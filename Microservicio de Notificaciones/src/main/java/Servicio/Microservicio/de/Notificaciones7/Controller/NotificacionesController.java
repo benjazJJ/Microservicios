@@ -7,48 +7,72 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
-@RestController 
-@RequestMapping("/api/v1/notificaciones") 
+@RestController
+@RequestMapping("/api/v1/notificaciones")
 public class NotificacionesController {
 
     @Autowired
-    private NotificacionesService notificacionesService; 
+    private NotificacionesService notificacionesService;
 
     // GET: Obtener todas las notificaciones
     @GetMapping
     public List<Notificaciones> obtenerTodas() {
-        return notificacionesService.obtenerTodas(); // Devuelve la lista completa de notificaciones
+        return notificacionesService.obtenerTodas();
     }
 
-    // GET: Obtener una notificación por ID
+    // GET por ID
     @GetMapping("/{id}")
     public ResponseEntity<Notificaciones> obtenerPorId(@PathVariable int id) {
-        // Busca la notificación por ID. Si existe, devuelve 200 OK con el objeto.
-        // Si no existe, devuelve 404 Not Found.
         return notificacionesService.obtenerPorId(id)
-                .map(ResponseEntity::ok) // Transforma el Optional en un ResponseEntity con status 200
-                .orElse(ResponseEntity.notFound().build()); // Si no existe, retorna 404
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // POST: Crear una nueva notificación
+    // GET por emisor
+    @GetMapping("/emisor/{correo}")
+    public List<Notificaciones> obtenerPorEmisor(@PathVariable String correo) {
+        return notificacionesService.obtenerPorEmisor(correo);
+    }
+
+    // GET por receptor
+    @GetMapping("/receptor/{correo}")
+    public List<Notificaciones> obtenerPorReceptor(@PathVariable String correo) {
+        return notificacionesService.obtenerPorReceptor(correo);
+    }
+
+    // POST: Crear notificación (ADMINISTRADOR o BIBLIOTECARIO)
     @PostMapping
-    public ResponseEntity<Notificaciones> crear(@RequestBody Notificaciones notificacion) {
-        Notificaciones creada = notificacionesService.guardar(notificacion); // Guarda la nueva notificación
-        return ResponseEntity.ok(creada); // Retorna la notificación guardada con status 200 OK
-    }
+    public ResponseEntity<?> crear(@RequestBody Map<String, Object> body) {
+        try {
+            Notificaciones noti = new Notificaciones();
+            noti.setMensaje((String) body.get("mensaje"));
+            noti.setTipo((String) body.get("tipo"));
+            noti.setCorreoEmisor((String) body.get("correoEmisor"));
+            noti.setCorreoReceptor((String) body.get("correoReceptor"));
 
-    // PUT: Actualizar una notificación existente
-    @PutMapping("/{id}")
-    public ResponseEntity<Notificaciones> actualizar(@PathVariable int id, @RequestBody Notificaciones notificacion) {
-        Notificaciones actualizada = notificacionesService.actualizar(id, notificacion); // Actualiza la notificación
-        return ResponseEntity.ok(actualizada); // Retorna la notificación actualizada con status 200 OK
-    }
+            String correo = (String) body.get("correo");
+            String contrasena = (String) body.get("contrasena");
 
-    // DELETE: Eliminar una notificación por ID
+            Notificaciones creada = notificacionesService.crear(noti, correo, contrasena);
+            return ResponseEntity.status(201).body(creada);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(403).body(e.getMessage());
+        }
+    }
+    
+    // DELETE: Eliminar notificación (solo ADMINISTRADOR o BIBLIOTECARIO)
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminar(@PathVariable int id) {
-        String mensaje = notificacionesService.eliminar(id); // Intenta eliminar la notificación por ID
-        return ResponseEntity.ok(mensaje); // Retorna un mensaje indicando si fue eliminado correctamente
+    public ResponseEntity<?> eliminar(@PathVariable int id, @RequestBody Map<String, String> body) {
+        try {
+            String correo = body.get("correo");
+            String contrasena = body.get("contrasena");
+
+            notificacionesService.eliminar(id, correo, contrasena);
+            return ResponseEntity.ok("Notificación eliminada correctamente.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(403).body(e.getMessage());
+        }
     }
 }

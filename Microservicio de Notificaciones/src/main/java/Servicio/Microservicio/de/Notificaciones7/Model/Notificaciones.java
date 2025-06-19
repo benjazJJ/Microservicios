@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "notificaciones") // Nombre de la tabla en la base de datos
+@Table(name = "notificaciones")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,11 +16,14 @@ public class Notificaciones {
     private int id;
 
     @Column(nullable = false, length = 255)
-    private String mensaje; // Contenido del mensaje de la notificación
+    private String mensaje;
 
     @Column(nullable = false, length = 50)
-    private String tipo; // Tipo de notificación: "Devolución", "Recordatorio", etc.
+    private String tipo;
 
     @Column(nullable = false, length = 100)
-    private String email; // Correo del destinatario para idenfiticar hacia quien va la notificación
+    private String correoReceptor;
+
+    @Column(nullable = false, length = 100)
+    private String correoEmisor;
 }

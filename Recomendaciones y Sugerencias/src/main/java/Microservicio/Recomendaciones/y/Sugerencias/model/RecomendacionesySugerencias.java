@@ -12,7 +12,7 @@ import jakarta.validation.constraints.Min;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "Recomendaciones_Sugerenciasa")
+@Table(name = "Recomendaciones_Sugerencias")
 public class RecomendacionesySugerencias {
 
     @Id
