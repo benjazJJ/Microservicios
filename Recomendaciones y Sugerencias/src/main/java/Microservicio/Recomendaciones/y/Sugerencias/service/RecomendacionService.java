@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,12 +60,18 @@ public class RecomendacionService {
             throw new RuntimeException("No existe un usuario con el ID: " + respuesta.idUsuario);
         }
 
+        // Validación de puntuación (1 a 5)
+        int puntuacion = Integer.parseInt(datos.get("puntuacion").toString());
+        if (puntuacion < 1 || puntuacion > 5) {
+            throw new IllegalArgumentException("La puntuación debe estar entre 1 y 5.");
+        }
+
         RecomendacionesySugerencias sugerencia = new RecomendacionesySugerencias();
         sugerencia.setIdUsuario(respuesta.idUsuario);
         sugerencia.setCorreo(correo);
         sugerencia.setContrasena(contrasena);
         sugerencia.setMensaje(datos.get("mensaje").toString());
-        sugerencia.setPuntuacion(Integer.parseInt(datos.get("puntuacion").toString()));
+        sugerencia.setPuntuacion(puntuacion);
         sugerencia.setFechaEnvio(Date.valueOf(LocalDate.now()));
 
         return crearRecomendacion(sugerencia);
@@ -75,6 +82,10 @@ public class RecomendacionService {
             throw new RuntimeException("Ya existe una recomendación enviada por este usuario.");
         }
 
+        if (sugerencia.getMensaje() == null || sugerencia.getMensaje().isEmpty()) {
+            throw new IllegalArgumentException("El mensaje no puede estar vacío.");
+        }
+
         return recomendacionRepository.save(sugerencia);
     }
 
@@ -83,11 +94,24 @@ public class RecomendacionService {
     }
 
     public RecomendacionesySugerencias obtenerPorId(int id) {
-        return recomendacionRepository.findById(id).orElse(null);
+        Optional<RecomendacionesySugerencias> sugerencia = recomendacionRepository.findById(id);
+        return sugerencia.orElse(null);
     }
 
     public void eliminarPorId(int id) {
         recomendacionRepository.deleteById(id);
+    }
+
+    public RecomendacionesySugerencias actualizarRecomendacion(RecomendacionesySugerencias sugerencia) {
+        if (sugerencia.getPuntuacion() < 1 || sugerencia.getPuntuacion() > 5) {
+            throw new IllegalArgumentException("La puntuación debe estar entre 1 y 5.");
+        }
+
+        if (sugerencia.getMensaje() == null || sugerencia.getMensaje().trim().isEmpty()) {
+            throw new IllegalArgumentException("El mensaje no puede estar vacío.");
+        }
+
+        return recomendacionRepository.save(sugerencia);
     }
 
     public static class ValidacionResponse {
@@ -95,9 +119,5 @@ public class RecomendacionService {
         public int idUsuario;
         public String correo;
         public String rol;
-    }
-
-    public RecomendacionesySugerencias actualizarRecomendacion(RecomendacionesySugerencias sugerencia) {
-        return recomendacionRepository.save(sugerencia);
     }
 }
