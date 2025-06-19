@@ -1,27 +1,29 @@
 package com.example.Microservicio.Multas.Service;
 
+import com.example.Microservicio.Multas.Model.Multa;
+import com.example.Microservicio.Multas.Repository.MultaRepository;
+import com.example.Microservicio.Multas.WebClient.MultasMult;
+import com.example.Microservicio.Multas.WebClient.ValidacionResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.example.Microservicio.Multas.Model.Multa;
-import com.example.Microservicio.Multas.Repository.MultaRepository;
-import com.example.Microservicio.Multas.WebClient.MultasClient;
-import com.example.Microservicio.Multas.WebClient.MultasMult;
-
 @Service
 public class MultaService {
+
     @Autowired
     private MultaRepository multaRepository;
 
     @Autowired
     private MultasMult multasMult;
 
-    @Autowired
-    private MultasClient multasClient;
+    private final WebClient webClient = WebClient.builder()
+            .baseUrl("http://localhost:8081") // Microservicio de autenticación
+            .build();
 
     public List<Multa> obtenerTodasLasMultas() {
         return multaRepository.findAll();
@@ -31,14 +33,14 @@ public class MultaService {
         return multaRepository.findById(id);
     }
 
-    public Multa crearMulta(Multa multa) {
-        // Validar que el runUsuario exista en Cuentas
-        if (!multasClient.validarUsuarioPorRut(multa.getRunUsuario())) {
-            throw new RuntimeException(
-                    "No se puede asignar la multa porque el usuario con RUT " + multa.getRunUsuario() + " no existe.");
+    public Multa crearMulta(Multa multa, String correo, String contrasena) {
+        ValidacionResponse response = validarUsuario(correo, contrasena);
+
+        if (!response.getRol().equalsIgnoreCase("ADMINISTRADOR") &&
+            !response.getRol().equalsIgnoreCase("BIBLIOTECARIO")) {
+            throw new RuntimeException("Solo administradores o bibliotecarios pueden registrar multas.");
         }
 
-        // Verificar si la devolución existe (por idDevolucion)
         Map<String, Object> mult = multasMult.getDevolucionById(multa.getIdDevolucion());
         if (mult == null || mult.isEmpty()) {
             throw new RuntimeException("Devolución no encontrada. No se puede asignar la multa.");
@@ -62,5 +64,24 @@ public class MultaService {
             return true;
         }
         return false;
+    }
+
+    // Método para validar usuario con correo y contraseña
+    public ValidacionResponse validarUsuario(String correo, String contrasena) {
+        ValidacionResponse response = webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/api/v1/autenticacion/validar")
+                        .queryParam("correo", correo)
+                        .queryParam("contrasena", contrasena)
+                        .build())
+                .retrieve()
+                .bodyToMono(ValidacionResponse.class)
+                .block();
+
+        if (response == null || !response.isAutenticado()) {
+            throw new RuntimeException("Credenciales inválidas o usuario no encontrado.");
+        }
+
+        return response;
     }
 }

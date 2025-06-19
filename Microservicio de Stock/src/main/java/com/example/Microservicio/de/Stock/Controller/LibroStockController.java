@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.Microservicio.de.Stock.Model.EstadoLibro;
 import com.example.Microservicio.de.Stock.Model.LibroStock;
 import com.example.Microservicio.de.Stock.Repository.EstadoLibroRepository;
 import com.example.Microservicio.de.Stock.Repository.LibroStockRepository;
@@ -45,7 +44,7 @@ public class LibroStockController {
     public ResponseEntity<?> obtenerLibroPorId(@PathVariable Long id) {
         Optional<LibroStock> libroStock = libroStockRepository.findById(id);
         return libroStock.map(ResponseEntity::ok)
-                         .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/crear")
@@ -61,8 +60,8 @@ public class LibroStockController {
 
         // Buscar si ya existe un libro con ese nombre
         Optional<LibroStock> libroExistenteOpt = libroStockRepository.findAll().stream()
-            .filter(l -> l.getNombreLibro().equalsIgnoreCase(nuevoLibro.getNombreLibro()))
-            .findFirst();
+                .filter(l -> l.getNombreLibro().equalsIgnoreCase(nuevoLibro.getNombreLibro()))
+                .findFirst();
 
         if (libroExistenteOpt.isPresent()) {
             LibroStock existente = libroExistenteOpt.get();
@@ -89,38 +88,23 @@ public class LibroStockController {
     }
 
     @PutMapping("/actualizar-stock/{id}")
-    public ResponseEntity<?> actualizarCantidad(@PathVariable Long id, @RequestBody Map<String, Object> datos) {
-        String correo = datos.get("correo").toString();
-        String contrasena = datos.get("contrasena").toString();
-        ValidacionResponse validacion = libroStockService.validarUsuario(correo, contrasena);
-        if (noTienePermiso(validacion)) {
-            return ResponseEntity.status(403).body("Acceso denegado.");
-        }
-
+    public ResponseEntity<?> actualizarCantidad(@PathVariable Long id, @RequestBody Map<String, Integer> datos) {
         Optional<LibroStock> libroOpt = libroStockRepository.findById(id);
+
         if (libroOpt.isEmpty()) {
             return ResponseEntity.status(404).body("Libro no encontrado");
         }
 
         LibroStock libro = libroOpt.get();
-        int nuevaCantidad = (int) datos.getOrDefault("cantidad", -1);
-        String nuevoEstado = datos.get("estado").toString();
+        int nuevaCantidad = datos.getOrDefault("cantidad", -1);
 
         if (nuevaCantidad < 0) {
             return ResponseEntity.badRequest().body("Cantidad inválida");
         }
-        if (nuevoEstado == null || nuevoEstado.isEmpty()) {
-            return ResponseEntity.badRequest().body("Estado inválido");
-        }
-
-        EstadoLibro estado = estadoLibroRepository.findAll().stream()
-                .filter(e -> e.getNombreEstado().equalsIgnoreCase(nuevoEstado))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Estado '" + nuevoEstado + "' no encontrado"));
 
         libro.setCantidad(nuevaCantidad);
-        libro.setEstado(estado);
         libroStockRepository.save(libro);
-        return ResponseEntity.ok("Cantidad y estado actualizados correctamente");
+        return ResponseEntity.ok("Cantidad actualizada correctamente");
     }
+
 }
