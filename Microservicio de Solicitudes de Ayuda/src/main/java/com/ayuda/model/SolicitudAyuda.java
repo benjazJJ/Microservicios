@@ -1,13 +1,17 @@
 package com.ayuda.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.sql.Date;
 
 @Data
 @Entity
 @Table(name = "solicitudes_ayuda")
+@AllArgsConstructor
+@NoArgsConstructor
 public class SolicitudAyuda {
 
     @Id

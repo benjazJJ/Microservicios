@@ -13,30 +13,39 @@
     </parent>
 
     <groupId>Servicio</groupId>
-    <artifactId>Microservicio-de-Solicitudes-de-Ayuda</artifactId>
+    <artifactId>Microservicio-de-Devolucion-6</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Microservicio-de-Solicitudes-de-Ayuda</name>
-    <description>Microservicio para que los usuarios soliciten ayuda o orientación respecto a un caso específico dentro de la biblioteca</description>
+    <name>Microservicio-de-Devolucion-6</name>
+    <description>Microservicio para gestionar devoluciones de libros</description>
 
     <properties>
         <java.version>21</java.version>
     </properties>
 
     <dependencies>
-        <!-- Spring Boot core -->
+
+        <!-- Actuator -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+        <!-- Web y REST -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- WebClient -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+
+        <!-- JPA -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
         <!-- MySQL -->
@@ -60,13 +69,14 @@
             <version>3.0.2</version>
         </dependency>
 
-        <!-- Swagger / OpenAPI -->
+        <!-- Swagger -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.3.0</version>
         </dependency>
 
+        <!-- HATEOAS -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-hateoas</artifactId>
@@ -105,10 +115,12 @@
             <artifactId>reactor-test</artifactId>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
+            <!-- Compilador -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -122,6 +134,7 @@
                 </configuration>
             </plugin>
 
+            <!-- Plugin Spring Boot -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
