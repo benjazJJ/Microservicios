@@ -63,10 +63,12 @@ public class DevolucionService {
         }
     }
 
+    //ESTE METODO YA FUÉ PROBADO CON @TEST 
     public List<Devolucion> listarDevoluciones() {
         return devolucionRepository.findAll();
     }
 
+    
     public Devolucion buscarDevolucionPorID(Integer id) {
         return devolucionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Devolución no encontrada"));
