@@ -68,7 +68,7 @@ public class DevolucionService {
         return devolucionRepository.findAll();
     }
 
-    
+    //ESTE METODO YA FUÉ TESTEADO
     public Devolucion buscarDevolucionPorID(Integer id) {
         return devolucionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Devolución no encontrada"));
@@ -117,7 +117,7 @@ public class DevolucionService {
 
         return devolucionRepository.save(existente);
     }
-
+    //ESTE METODO YA FUÉ TESTEADO
     public void borrarDevolucion(Integer idDevolucion) {
         devolucionRepository.deleteById(idDevolucion);
     }

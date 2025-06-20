@@ -16,7 +16,7 @@ public class DevolucionController {
 
     @Autowired
     private DevolucionService devolucionService;
-
+    //ESTE METODO YA FUÉ TESTEADO
     // GET: todos pueden acceder
     @GetMapping
     public ResponseEntity<List<Devolucion>> listar() {
@@ -46,7 +46,7 @@ public class DevolucionController {
             return ResponseEntity.status(403).body(e.getMessage());
         }
     }
-
+    //ESTE METODO YA FUÉ TESTEADO
     // GET por ID: todos pueden acceder
     @GetMapping("/{id}")
     public ResponseEntity<Devolucion> buscarDevolucionPorId(@PathVariable Integer id) {

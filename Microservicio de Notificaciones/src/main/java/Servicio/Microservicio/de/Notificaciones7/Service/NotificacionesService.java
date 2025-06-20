@@ -50,10 +50,11 @@ public class NotificacionesService {
         }
     }
 
+    //ESTE METODO YA FUÉ TESTEADO
     public List<Notificaciones> obtenerTodas() {
         return notificacionesRepository.findAll();
     }
-
+    //ESTE METODO YA FUÉ TESTEADO
     public Optional<Notificaciones> obtenerPorId(int id) {
         return notificacionesRepository.findById(id);
     }
@@ -78,11 +79,11 @@ public class NotificacionesService {
             return "No se encontró la notificación con el ID proporcionado";
         }
     }
-
+    //ESTE METODO YA FUÉ TESTEADO
     public List<Notificaciones> obtenerPorEmisor(String correoEmisor) {
         return notificacionesRepository.findByCorreoEmisor(correoEmisor);
     }
-
+    //ESTE METODO YA FUÉ TESTEADO
     public List<Notificaciones> obtenerPorReceptor(String correoReceptor) {
         return notificacionesRepository.findByCorreoReceptor(correoReceptor);
     }
