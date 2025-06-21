@@ -18,6 +18,8 @@ import com.example.Microservicio.de.Stock.Repository.LibroStockRepository;
 import com.example.Microservicio.de.Stock.Service.LibroStockService;
 import com.example.Microservicio.de.Stock.Service.ValidacionResponse;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 @RestController
 @RequestMapping("/api/v1/librostock")
 public class LibroStockController {
@@ -37,7 +39,7 @@ public class LibroStockController {
                 validacion.getRol().equalsIgnoreCase("DOCENTE");
     }
 
-    // GET público: ver todos los libros en stock con HATEOAS
+    @Operation(summary = "Obtener todos los libros en stock", description = "Devuelve una lista de todos los libros disponibles en stock con enlaces HATEOAS")
     @GetMapping
     public ResponseEntity<CollectionModel<EntityModel<LibroStock>>> obtenerLibroStock() {
         List<LibroStock> lista = libroStockRepository.findAll();
@@ -54,7 +56,7 @@ public class LibroStockController {
         return ResponseEntity.ok(CollectionModel.of(recursos));
     }
 
-    // GET público: obtener un libro por su ID con HATEOAS
+    @Operation(summary = "Obtener un libro por ID", description = "Devuelve la información de un libro específico si existe, incluyendo enlaces HATEOAS")
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerLibroPorId(@PathVariable Long id) {
         return libroStockRepository.findById(id)
@@ -71,7 +73,7 @@ public class LibroStockController {
             .orElse(ResponseEntity.notFound().build());
     }
 
-    // POST con validación: crear o aumentar libro, con retorno HATEOAS
+    @Operation(summary = "Crear libro en stock", description = "Crea un nuevo libro en el stock o actualiza la cantidad si ya existe. Requiere rol ADMINISTRADOR o BIBLIOTECARIO")
     @PostMapping("/crear")
     public ResponseEntity<?> crearLibroStock(@RequestBody Map<String, Object> datos) {
         String correo = datos.get("correo").toString();
@@ -108,7 +110,7 @@ public class LibroStockController {
         return ResponseEntity.ok(recurso);
     }
 
-    // DELETE con validación
+    @Operation(summary = "Eliminar libro del stock", description = "Elimina un libro existente por ID. Solo ADMINISTRADOR o BIBLIOTECARIO pueden eliminar")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Long id, @RequestBody Map<String, String> datos) {
         ValidacionResponse validacion = libroStockService.validarUsuario(datos.get("correo"), datos.get("contrasena"));
@@ -124,7 +126,7 @@ public class LibroStockController {
         }
     }
 
-    // PUT público: solo actualiza la cantidad, no requiere HATEOAS
+    @Operation(summary = "Actualizar cantidad de libro", description = "Modifica el número de ejemplares disponibles de un libro. No requiere validación")
     @PutMapping("/actualizar-stock/{id}")
     public ResponseEntity<?> actualizarCantidad(@PathVariable Long id, @RequestBody Map<String, Integer> datos) {
         Optional<LibroStock> libroOpt = libroStockRepository.findById(id);

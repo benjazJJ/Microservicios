@@ -14,10 +14,8 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-// Asociar con el controlador real
 @WebMvcTest(NotificacionesController.class)
 public class NotificacionesControllerTest {
 
@@ -37,7 +35,9 @@ public class NotificacionesControllerTest {
 
         mockMvc.perform(get("/api/v1/notificaciones"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1));
+                .andExpect(jsonPath("$._embedded.notificacionesList[0].mensaje").value("Mensaje 1"))
+                .andExpect(jsonPath("$._embedded.notificacionesList[0].correoReceptor").value("receptor@correo.cl"))
+                .andExpect(jsonPath("$._embedded.notificacionesList[0]._links.self.href").exists());
     }
 
     @Test
@@ -48,7 +48,10 @@ public class NotificacionesControllerTest {
 
         mockMvc.perform(get("/api/v1/notificaciones/2"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(2));
+                .andExpect(jsonPath("$.mensaje").value("Mensaje 2"))
+                .andExpect(jsonPath("$._links.self.href").exists())
+                .andExpect(jsonPath("$._links.todas.href").exists())
+                .andExpect(jsonPath("$._links.eliminar.href").exists());
     }
 
     @Test
@@ -61,7 +64,8 @@ public class NotificacionesControllerTest {
 
         mockMvc.perform(get("/api/v1/notificaciones/emisor/admin@correo.cl"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].correoEmisor").value("admin@correo.cl"));
+                .andExpect(jsonPath("$._embedded.notificacionesList[0].correoEmisor").value("admin@correo.cl"))
+                .andExpect(jsonPath("$._embedded.notificacionesList[0]._links.self.href").exists());
     }
 
     @Test
@@ -74,6 +78,7 @@ public class NotificacionesControllerTest {
 
         mockMvc.perform(get("/api/v1/notificaciones/receptor/cliente@correo.cl"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].correoReceptor").value("cliente@correo.cl"));
+                .andExpect(jsonPath("$._embedded.notificacionesList[0].correoReceptor").value("cliente@correo.cl"))
+                .andExpect(jsonPath("$._embedded.notificacionesList[0]._links.self.href").exists());
     }
 }
