@@ -8,4 +8,13 @@ public class ValidacionResponse {
     private int idUsuario;
     private String correo;
     private String rol;
+
+    // Constructor personalizado para usar en los tests
+    public ValidacionResponse(boolean autenticado, String rol) {
+        this.autenticado = autenticado;
+        this.rol = rol;
+    }
+
+    // Constructor vacío (requerido por Jackson u otros frameworks)
+    public ValidacionResponse() {}
 }
