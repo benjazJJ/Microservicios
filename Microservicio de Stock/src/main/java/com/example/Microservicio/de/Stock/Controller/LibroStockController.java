@@ -27,19 +27,29 @@ public class LibroStockController {
     @Autowired
     private LibroStockService libroStockService;
 
+    /**
+     * Método de utilidad privada para validar que el usuario no sea ESTUDIANTE ni DOCENTE,
+     * y que esté autenticado.
+     */
     private boolean noTienePermiso(ValidacionResponse validacion) {
         return !validacion.isAutenticado() ||
                 validacion.getRol().equalsIgnoreCase("ESTUDIANTE") ||
                 validacion.getRol().equalsIgnoreCase("DOCENTE");
     }
 
-    // GET público - ver todo el stock
+    /**
+     * GET público.
+     * Devuelve la lista completa de libros en stock.
+     */
     @GetMapping
     public ResponseEntity<List<LibroStock>> obtenerLibroStock() {
         return ResponseEntity.ok(libroStockRepository.findAll());
     }
 
-    // GET público - ver libro por ID
+    /**
+     * GET público.
+     * Devuelve un libro específico por su ID si existe.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerLibroPorId(@PathVariable Long id) {
         Optional<LibroStock> libroStock = libroStockRepository.findById(id);
@@ -47,31 +57,44 @@ public class LibroStockController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    /**
+     * POST con validación de rol.
+     * Crea un nuevo libro en stock o aumenta su cantidad si ya existe con el mismo nombre.
+     * Solo pueden ejecutar este método los usuarios con rol ADMINISTRADOR o BIBLIOTECARIO.
+     */
     @PostMapping("/crear")
     public ResponseEntity<?> crearLibroStock(@RequestBody Map<String, Object> datos) {
         String correo = datos.get("correo").toString();
         String contrasena = datos.get("contrasena").toString();
         ValidacionResponse validacion = libroStockService.validarUsuario(correo, contrasena);
+        
         if (noTienePermiso(validacion)) {
             return ResponseEntity.status(403).body("Acceso denegado.");
         }
 
         LibroStock nuevoLibro = libroStockService.mapToLibroStock(datos);
 
-        // Buscar si ya existe un libro con ese nombre
+        // Buscar si ya existe un libro con el mismo nombre
         Optional<LibroStock> libroExistenteOpt = libroStockRepository.findAll().stream()
                 .filter(l -> l.getNombreLibro().equalsIgnoreCase(nuevoLibro.getNombreLibro()))
                 .findFirst();
 
+        // Si existe, solo se actualiza la cantidad
         if (libroExistenteOpt.isPresent()) {
             LibroStock existente = libroExistenteOpt.get();
             existente.setCantidad(existente.getCantidad() + nuevoLibro.getCantidad());
             return ResponseEntity.ok(libroStockRepository.save(existente));
         } else {
+            // Si no existe, se crea un nuevo registro
             return ResponseEntity.ok(libroStockRepository.save(nuevoLibro));
         }
     }
 
+    /**
+     * DELETE con validación de rol.
+     * Elimina un libro del stock por su ID si existe.
+     * Solo ADMINISTRADOR o BIBLIOTECARIO pueden eliminar.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Long id, @RequestBody Map<String, String> datos) {
         ValidacionResponse validacion = libroStockService.validarUsuario(datos.get("correo"), datos.get("contrasena"));
@@ -87,6 +110,11 @@ public class LibroStockController {
         }
     }
 
+    /**
+     * PUT público.
+     * Actualiza la cantidad de un libro en stock por su ID.
+     * No requiere validación de usuario, ya que se usa para operaciones internas/controladas.
+     */
     @PutMapping("/actualizar-stock/{id}")
     public ResponseEntity<?> actualizarCantidad(@PathVariable Long id, @RequestBody Map<String, Integer> datos) {
         Optional<LibroStock> libroOpt = libroStockRepository.findById(id);
@@ -95,16 +123,15 @@ public class LibroStockController {
             return ResponseEntity.status(404).body("Libro no encontrado");
         }
 
-        LibroStock libro = libroOpt.get();
         int nuevaCantidad = datos.getOrDefault("cantidad", -1);
-
         if (nuevaCantidad < 0) {
             return ResponseEntity.badRequest().body("Cantidad inválida");
         }
 
+        LibroStock libro = libroOpt.get();
         libro.setCantidad(nuevaCantidad);
         libroStockRepository.save(libro);
+
         return ResponseEntity.ok("Cantidad actualizada correctamente");
     }
-
 }
