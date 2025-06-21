@@ -15,8 +15,9 @@ import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import static org.hamcrest.Matchers.*;
 
 @WebMvcTest(DevolucionController.class)
 public class DevolucionControllerTest {
@@ -28,7 +29,7 @@ public class DevolucionControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    void getAllDevoluciones_returnsOkAndJson() throws Exception {
+    void getAllDevoluciones_returnsOkAndJsonWithLinks() throws Exception {
         List<Devolucion> devoluciones = Arrays.asList(
                 new Devolucion(1, Date.valueOf("2025-06-01"), "Bueno", null, 10)
         );
@@ -37,11 +38,13 @@ public class DevolucionControllerTest {
 
         mockMvc.perform(get("/api/v1/devoluciones"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].idDevolucion").value(1));
+                .andExpect(jsonPath("$._embedded.devolucionList[0].idDevolucion").value(1))
+                .andExpect(jsonPath("$._embedded.devolucionList[0].estadoLibro").value("Bueno"))
+                .andExpect(jsonPath("$._embedded.devolucionList[0]._links.self.href", notNullValue()));
     }
 
     @Test
-    void getDevolucionPorId_returnsOkAndJson() throws Exception {
+    void getDevolucionPorId_returnsOkAndJsonWithLinks() throws Exception {
         Devolucion devolucion = new Devolucion(2, Date.valueOf("2025-06-15"), "Dañado", "Tapa rota", 20);
 
         when(devolucionService.buscarDevolucionPorID(2)).thenReturn(devolucion);
@@ -50,7 +53,9 @@ public class DevolucionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.idDevolucion").value(2))
                 .andExpect(jsonPath("$.estadoLibro").value("Dañado"))
-                .andExpect(jsonPath("$.observaciones").value("Tapa rota"));
+                .andExpect(jsonPath("$.observaciones").value("Tapa rota"))
+                .andExpect(jsonPath("$._links.self.href", notNullValue()))
+                .andExpect(jsonPath("$._links.todas.href", notNullValue()));
     }
 
     @Test
