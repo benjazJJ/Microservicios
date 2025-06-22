@@ -20,6 +20,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import static org.hamcrest.Matchers.*;
+
 @WebMvcTest(RecomendacionController.class)
 public class RecomendacionControllerTest {
 
@@ -33,7 +35,7 @@ public class RecomendacionControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void getAllSugerencias_returnsOkAndJson() throws Exception {
+    void getAllSugerencias_returnsOkAndHateoasJson() throws Exception {
         List<RecomendacionesySugerencias> lista = Arrays.asList(
                 new RecomendacionesySugerencias(1, 2, "a@a.cl", "123", "Muy bueno", Date.valueOf(LocalDate.now()), 4)
         );
@@ -42,21 +44,26 @@ public class RecomendacionControllerTest {
 
         mockMvc.perform(get("/api/v1/sugerencias"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].idEncuesta").value(1));
+                .andExpect(jsonPath("$._embedded.recomendacionesySugerenciasList[0].idEncuesta").value(1))
+                .andExpect(jsonPath("$._embedded.recomendacionesySugerenciasList[0].mensaje").value("Muy bueno"))
+                .andExpect(jsonPath("$._embedded.recomendacionesySugerenciasList[0]._links.self.href", notNullValue()))
+                .andExpect(jsonPath("$._links.self.href", notNullValue()));
     }
 
     @Test
-    void getSugerenciaById_returnsOk() throws Exception {
+    void getSugerenciaById_returnsOkWithLinks() throws Exception {
         RecomendacionesySugerencias sugerencia = new RecomendacionesySugerencias(1, 2, "a@a.cl", "123", "Buen libro", Date.valueOf(LocalDate.now()), 4);
         when(service.obtenerPorId(1)).thenReturn(sugerencia);
 
         mockMvc.perform(get("/api/v1/sugerencias/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.mensaje").value("Buen libro"));
+                .andExpect(jsonPath("$.mensaje").value("Buen libro"))
+                .andExpect(jsonPath("$._links.self.href", notNullValue()))
+                .andExpect(jsonPath("$._links.todas.href", notNullValue()));
     }
 
     @Test
-    void postSugerencia_returnsCreated() throws Exception {
+    void postSugerencia_returnsCreatedWithLinks() throws Exception {
         Map<String, Object> datos = new HashMap<>();
         datos.put("correo", "a@a.cl");
         datos.put("contrasena", "123");
@@ -70,11 +77,13 @@ public class RecomendacionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(datos)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.mensaje").value("Buen libro"));
+                .andExpect(jsonPath("$.mensaje").value("Buen libro"))
+                .andExpect(jsonPath("$._links.self.href", notNullValue()))
+                .andExpect(jsonPath("$._links.todas.href", notNullValue()));
     }
 
     @Test
-    void putSugerencia_returnsUpdated() throws Exception {
+    void putSugerencia_returnsUpdatedMessage() throws Exception {
         RecomendacionesySugerencias existente = new RecomendacionesySugerencias(1, 2, "a@a.cl", "123", "Antiguo", Date.valueOf(LocalDate.now()), 2);
         RecomendacionesySugerencias actualizado = new RecomendacionesySugerencias(1, 2, "a@a.cl", "123", "Nuevo mensaje", Date.valueOf(LocalDate.now()), 5);
 
