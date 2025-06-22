@@ -1,0 +1,7 @@
+Microservicio\Solicitudes\de\Ayuda\Repository\SolicitudAyudaRepository.class
+Microservicio\Solicitudes\de\Ayuda\Controller\SolicitudAyudaController.class
+Microservicio\Solicitudes\de\Ayuda\Service\SolicitudAyudaService.class
+Microservicio\Solicitudes\de\Ayuda\SolicitudesDeAyudaApplication.class
+Microservicio\Solicitudes\de\Ayuda\Config\OpenAPIConfig.class
+Microservicio\Solicitudes\de\Ayuda\WebClient\ValidacionResponse.class
+Microservicio\Solicitudes\de\Ayuda\Model\SolicitudAyuda.class
