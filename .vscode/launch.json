@@ -2,6 +2,48 @@
     "configurations": [
         {
             "type": "java",
+            "name": "RecomendacionesYSugerenciasApplication",
+            "request": "launch",
+            "mainClass": "Microservicio.Recomendaciones.y.Sugerencias.RecomendacionesYSugerenciasApplication",
+            "projectName": "biblioteca.salas-duoc"
+        },
+        {
+            "type": "java",
+            "name": "MicroservicioRolesYPermisosApplication",
+            "request": "launch",
+            "mainClass": "Microservicio.Microservicio.Roles.Y.Permisos.MicroservicioRolesYPermisosApplication",
+            "projectName": "Microservicio-Microservicio-Roles-Y-Permisos"
+        },
+        {
+            "type": "java",
+            "name": "MicroservicioMultasApplication",
+            "request": "launch",
+            "mainClass": "com.example.Microservicio.Multas.MicroservicioMultasApplication",
+            "projectName": "com.example-Microservicio-Multas"
+        },
+        {
+            "type": "java",
+            "name": "MicroservicioDeStockApplication",
+            "request": "launch",
+            "mainClass": "com.example.Microservicio.de.Stock.MicroservicioDeStockApplication",
+            "projectName": "com.example-Microservicio-de-Stock"
+        },
+        {
+            "type": "java",
+            "name": "Application",
+            "request": "launch",
+            "mainClass": "Servicio.Microservicio.de.Notificaciones7.Application",
+            "projectName": "Servicio-Microservicio-de-Notificaciones-7"
+        },
+        {
+            "type": "java",
+            "name": "Application",
+            "request": "launch",
+            "mainClass": "Servicio.Microservicio.de.Devolucion6.Application",
+            "projectName": "Servicio-Microservicio-de-Devolucion-6"
+        },
+        {
+            "type": "java",
             "name": "MicroservicioRecomendacionLecturaApplication",
             "request": "launch",
             "mainClass": "Servicio.Microservicio.Recomendacion.Lectura.MicroservicioRecomendacionLecturaApplication",
