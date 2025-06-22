@@ -1,0 +1,41 @@
+-------------------------------------------------------------------------------
+Test set: Microservicio.Solicitudes.de.Ayuda.Controller.SolicitudAyudaControllerTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 3.738 s <<< FAILURE! -- in Microservicio.Solicitudes.de.Ayuda.Controller.SolicitudAyudaControllerTest
+Microservicio.Solicitudes.de.Ayuda.Controller.SolicitudAyudaControllerTest.obtenerPorId_existente_deberiaRetornarOK -- Time elapsed: 0.098 s <<< FAILURE!
+java.lang.AssertionError: No value at JSON path "$._links.self.href"
+	at org.springframework.test.util.JsonPathExpectationsHelper.evaluateJsonPath(JsonPathExpectationsHelper.java:351)
+	at org.springframework.test.util.JsonPathExpectationsHelper.assertExistsAndReturn(JsonPathExpectationsHelper.java:388)
+	at org.springframework.test.util.JsonPathExpectationsHelper.exists(JsonPathExpectationsHelper.java:239)
+	at org.springframework.test.web.servlet.result.JsonPathResultMatchers.lambda$exists$3(JsonPathResultMatchers.java:124)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at Microservicio.Solicitudes.de.Ayuda.Controller.SolicitudAyudaControllerTest.obtenerPorId_existente_deberiaRetornarOK(SolicitudAyudaControllerTest.java:70)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+Caused by: com.jayway.jsonpath.PathNotFoundException: Missing property in path $['_links']
+
+Microservicio.Solicitudes.de.Ayuda.Controller.SolicitudAyudaControllerTest.obtenerPorCorreo_deberiaRetornarOKYJson -- Time elapsed: 0.046 s <<< FAILURE!
+java.lang.AssertionError: No value at JSON path "$._embedded.solicitudAyudaList[0].correoUsuario"
+	at org.springframework.test.util.JsonPathExpectationsHelper.evaluateJsonPath(JsonPathExpectationsHelper.java:351)
+	at org.springframework.test.util.JsonPathExpectationsHelper.assertValue(JsonPathExpectationsHelper.java:148)
+	at org.springframework.test.web.servlet.result.JsonPathResultMatchers.lambda$value$2(JsonPathResultMatchers.java:112)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at Microservicio.Solicitudes.de.Ayuda.Controller.SolicitudAyudaControllerTest.obtenerPorCorreo_deberiaRetornarOKYJson(SolicitudAyudaControllerTest.java:101)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+Caused by: com.jayway.jsonpath.PathNotFoundException: Expected to find an object with property ['_embedded'] in path $ but found 'net.minidev.json.JSONArray'. This is not a json object according to the JsonProvider: 'com.jayway.jsonpath.spi.json.JsonSmartJsonProvider'.
+
+Microservicio.Solicitudes.de.Ayuda.Controller.SolicitudAyudaControllerTest.obtenerTodas_deberiaRetornarOKYListaJson -- Time elapsed: 0.008 s <<< FAILURE!
+java.lang.AssertionError: No value at JSON path "$._embedded.solicitudAyudaList[0].correoUsuario"
+	at org.springframework.test.util.JsonPathExpectationsHelper.evaluateJsonPath(JsonPathExpectationsHelper.java:351)
+	at org.springframework.test.util.JsonPathExpectationsHelper.assertValue(JsonPathExpectationsHelper.java:148)
+	at org.springframework.test.web.servlet.result.JsonPathResultMatchers.lambda$value$2(JsonPathResultMatchers.java:112)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at Microservicio.Solicitudes.de.Ayuda.Controller.SolicitudAyudaControllerTest.obtenerTodas_deberiaRetornarOKYListaJson(SolicitudAyudaControllerTest.java:48)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+Caused by: com.jayway.jsonpath.PathNotFoundException: Expected to find an object with property ['_embedded'] in path $ but found 'net.minidev.json.JSONArray'. This is not a json object according to the JsonProvider: 'com.jayway.jsonpath.spi.json.JsonSmartJsonProvider'.
+
