@@ -19,6 +19,10 @@ import com.example.Microservicio.de.Stock.Service.LibroStockService;
 import com.example.Microservicio.de.Stock.Service.ValidacionResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/api/v1/librostock")
@@ -40,6 +44,9 @@ public class LibroStockController {
     }
 
     @Operation(summary = "Obtener todos los libros en stock", description = "Devuelve una lista de todos los libros disponibles en stock con enlaces HATEOAS")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Libros encontrados", content = @Content(schema = @Schema(implementation = LibroStock.class)))
+    })
     @GetMapping
     public ResponseEntity<CollectionModel<EntityModel<LibroStock>>> obtenerLibroStock() {
         List<LibroStock> lista = libroStockRepository.findAll();
@@ -57,6 +64,10 @@ public class LibroStockController {
     }
 
     @Operation(summary = "Obtener un libro por ID", description = "Devuelve la información de un libro específico si existe, incluyendo enlaces HATEOAS")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Libro encontrado", content = @Content(schema = @Schema(implementation = LibroStock.class))),
+        @ApiResponse(responseCode = "404", description = "Libro no encontrado", content = @Content)
+    })
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerLibroPorId(@PathVariable Long id) {
         return libroStockRepository.findById(id)
@@ -74,6 +85,10 @@ public class LibroStockController {
     }
 
     @Operation(summary = "Crear libro en stock", description = "Crea un nuevo libro en el stock o actualiza la cantidad si ya existe. Requiere rol ADMINISTRADOR o BIBLIOTECARIO")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Libro creado o actualizado exitosamente", content = @Content(schema = @Schema(implementation = LibroStock.class))),
+        @ApiResponse(responseCode = "403", description = "Acceso denegado por rol insuficiente", content = @Content)
+    })
     @PostMapping("/crear")
     public ResponseEntity<?> crearLibroStock(@RequestBody Map<String, Object> datos) {
         String correo = datos.get("correo").toString();
@@ -111,6 +126,11 @@ public class LibroStockController {
     }
 
     @Operation(summary = "Eliminar libro del stock", description = "Elimina un libro existente por ID. Solo ADMINISTRADOR o BIBLIOTECARIO pueden eliminar")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Libro eliminado exitosamente", content = @Content),
+        @ApiResponse(responseCode = "403", description = "Acceso denegado por rol insuficiente", content = @Content),
+        @ApiResponse(responseCode = "404", description = "Libro no encontrado", content = @Content)
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Long id, @RequestBody Map<String, String> datos) {
         ValidacionResponse validacion = libroStockService.validarUsuario(datos.get("correo"), datos.get("contrasena"));
@@ -127,6 +147,11 @@ public class LibroStockController {
     }
 
     @Operation(summary = "Actualizar cantidad de libro", description = "Modifica el número de ejemplares disponibles de un libro. No requiere validación")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Cantidad actualizada correctamente", content = @Content),
+        @ApiResponse(responseCode = "400", description = "Cantidad inválida", content = @Content),
+        @ApiResponse(responseCode = "404", description = "Libro no encontrado", content = @Content)
+    })
     @PutMapping("/actualizar-stock/{id}")
     public ResponseEntity<?> actualizarCantidad(@PathVariable Long id, @RequestBody Map<String, Integer> datos) {
         Optional<LibroStock> libroOpt = libroStockRepository.findById(id);
