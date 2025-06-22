@@ -1,16 +1,20 @@
 package Microservicio.Recomendaciones.y.Sugerencias.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.*;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import Microservicio.Recomendaciones.y.Sugerencias.model.RecomendacionesySugerencias;
 import Microservicio.Recomendaciones.y.Sugerencias.service.RecomendacionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.*;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/api/v1/sugerencias")
@@ -19,7 +23,12 @@ public class RecomendacionController {
     @Autowired
     private RecomendacionService service;
 
-    // Crear nueva sugerencia con validación
+    @Operation(summary = "Crear una nueva sugerencia con validación de usuario")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Sugerencia creada exitosamente", content = @Content(schema = @Schema(implementation = RecomendacionesySugerencias.class))),
+        @ApiResponse(responseCode = "401", description = "Credenciales inválidas", content = @Content),
+        @ApiResponse(responseCode = "400", description = "Error en la solicitud", content = @Content)
+    })
     @PostMapping
     public ResponseEntity<?> crearSugerencia(@RequestBody Map<String, Object> datos) {
         try {
@@ -27,37 +36,68 @@ public class RecomendacionController {
             String contrasena = (String) datos.get("contrasena");
 
             RecomendacionesySugerencias sugerencia = service.crearRecomendacionSiEsValida(datos, correo, contrasena);
-            return ResponseEntity.status(201).body(sugerencia);
+            return ResponseEntity.status(201).body(EntityModel.of(sugerencia,
+                    WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RecomendacionController.class)
+                            .obtenerSugerenciaPorId(sugerencia.getIdEncuesta())).withSelfRel(),
+                    WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RecomendacionController.class)
+                            .obtenerSugerencias()).withRel("todas")));
         } catch (IllegalArgumentException e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("mensaje", e.getMessage());
-            return ResponseEntity.status(401).body(error);
+            return ResponseEntity.status(401).body(Map.of("mensaje", e.getMessage()));
         } catch (RuntimeException e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("mensaje", e.getMessage());
-            return ResponseEntity.status(400).body(error);
+            return ResponseEntity.status(400).body(Map.of("mensaje", e.getMessage()));
         }
     }
 
-    // Obtener todas las sugerencias
+    @Operation(summary = "Obtener todas las sugerencias")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Sugerencias obtenidas", content = @Content(schema = @Schema(implementation = RecomendacionesySugerencias.class)))
+    })
     @GetMapping
-    public ResponseEntity<List<RecomendacionesySugerencias>> obtenerSugerencias() {
+    public ResponseEntity<CollectionModel<EntityModel<RecomendacionesySugerencias>>> obtenerSugerencias() {
         List<RecomendacionesySugerencias> sugerencias = service.obtenerTodas();
-        return ResponseEntity.ok(sugerencias);
+
+        List<EntityModel<RecomendacionesySugerencias>> recursos = sugerencias.stream()
+                .map(s -> EntityModel.of(s,
+                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RecomendacionController.class)
+                                .obtenerSugerenciaPorId(s.getIdEncuesta())).withSelfRel()))
+                .collect(Collectors.toList());
+
+        CollectionModel<EntityModel<RecomendacionesySugerencias>> collection = CollectionModel.of(
+                recursos,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RecomendacionController.class)
+                        .obtenerSugerencias()).withSelfRel());
+
+        return ResponseEntity.ok(collection);
     }
 
-    // Obtener sugerencia por ID
+    @Operation(summary = "Obtener una sugerencia por su ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Sugerencia encontrada", content = @Content(schema = @Schema(implementation = RecomendacionesySugerencias.class))),
+        @ApiResponse(responseCode = "404", description = "Sugerencia no encontrada", content = @Content)
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<RecomendacionesySugerencias> obtenerSugerenciaPorId(@PathVariable Integer id) {
+    public ResponseEntity<?> obtenerSugerenciaPorId(@PathVariable Integer id) {
         Optional<RecomendacionesySugerencias> sugerenciaOpt = Optional.ofNullable(service.obtenerPorId(id));
-        return sugerenciaOpt.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return sugerenciaOpt.map(s -> {
+            EntityModel<RecomendacionesySugerencias> recurso = EntityModel.of(s);
+            recurso.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RecomendacionController.class)
+                    .obtenerSugerenciaPorId(id)).withSelfRel());
+            recurso.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RecomendacionController.class)
+                    .obtenerSugerencias()).withRel("todas"));
+            return ResponseEntity.ok(recurso);
+        }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Actualizar sugerencia
+    @Operation(summary = "Actualizar una sugerencia")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Sugerencia actualizada", content = @Content(schema = @Schema(implementation = RecomendacionesySugerencias.class))),
+        @ApiResponse(responseCode = "404", description = "Sugerencia no encontrada", content = @Content),
+        @ApiResponse(responseCode = "400", description = "Error al actualizar", content = @Content)
+    })
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, Object>> actualizarSugerencia(@PathVariable Integer id,
             @RequestBody Map<String, Object> datos) {
+
         RecomendacionesySugerencias sugerenciaExistente = service.obtenerPorId(id);
         if (sugerenciaExistente == null) {
             return ResponseEntity.notFound().build();
@@ -78,21 +118,21 @@ public class RecomendacionController {
 
             return ResponseEntity.ok(respuesta);
         } catch (Exception e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("mensaje", "Error al actualizar la sugerencia: " + e.getMessage());
             return ResponseEntity.status(400).body(Map.of("error", e.getMessage()));
         }
     }
 
-    // Eliminar sugerencia por ID
+    @Operation(summary = "Eliminar una sugerencia por ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Sugerencia eliminada exitosamente", content = @Content),
+        @ApiResponse(responseCode = "404", description = "Sugerencia no encontrada", content = @Content)
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, String>> eliminarSugerencia(@PathVariable Integer id) {
         if (service.obtenerPorId(id) == null) {
             return ResponseEntity.notFound().build();
         }
         service.eliminarPorId(id);
-        Map<String, String> response = new HashMap<>();
-        response.put("mensaje", "Sugerencia eliminada con éxito");
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(Map.of("mensaje", "Sugerencia eliminada con éxito"));
     }
 }
