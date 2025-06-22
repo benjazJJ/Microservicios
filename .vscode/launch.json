@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "SolicitudAyudaApplication",
+            "request": "launch",
+            "mainClass": "com.ayuda.SolicitudAyudaApplication",
+            "projectName": ""
+        },
+        {
+            "type": "java",
             "name": "RecomendacionesYSugerenciasApplication",
             "request": "launch",
             "mainClass": "Microservicio.Recomendaciones.y.Sugerencias.RecomendacionesYSugerenciasApplication",

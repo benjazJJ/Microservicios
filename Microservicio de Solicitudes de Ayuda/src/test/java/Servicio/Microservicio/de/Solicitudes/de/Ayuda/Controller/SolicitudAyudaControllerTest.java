@@ -30,23 +30,33 @@ public class SolicitudAyudaControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    /**
+     * Test para GET /api/v1/ayuda
+     * Verifica que se devuelva una lista de solicitudes con estado 200 y contenido JSON.
+     */
     @Test
-    void obtenerTodas_deberiaRetornarOkYJson() throws Exception {
-        List<SolicitudAyuda> lista = Arrays.asList(
-            new SolicitudAyuda(1, "alumno@correo.cl", "Acceso", "No puedo ingresar", Date.valueOf("2025-06-10"))
+    void obtenerTodas_deberiaRetornarOKYListaJson() throws Exception {
+        List<SolicitudAyuda> lista = List.of(
+                new SolicitudAyuda(1, "alumno@correo.cl", "Acceso", "No puedo ingresar", Date.valueOf("2025-06-10"))
         );
 
         when(service.obtenerTodas()).thenReturn(lista);
 
         mockMvc.perform(get("/api/v1/ayuda"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].idSolicitud").value(1));
+                .andExpect(jsonPath("$._embedded.solicitudAyudaList[0].correoUsuario").value("alumno@correo.cl"))
+                .andExpect(jsonPath("$._embedded.solicitudAyudaList[0].asunto").value("Acceso"))
+                .andExpect(jsonPath("$._embedded.solicitudAyudaList[0]._links.self.href").exists());
     }
 
+    /**
+     * Test para GET /api/v1/ayuda/2
+     * Verifica que se devuelva una solicitud específica con sus datos y enlaces HATEOAS.
+     */
     @Test
-    void obtenerPorId_existente_deberiaRetornarOkYJson() throws Exception {
+    void obtenerPorId_existente_deberiaRetornarOK() throws Exception {
         SolicitudAyuda solicitud = new SolicitudAyuda(
-            2, "usuario@correo.cl", "Consulta", "¿Dónde renovar?", Date.valueOf("2025-06-11")
+                2, "usuario@correo.cl", "Consulta", "¿Dónde renovar?", Date.valueOf("2025-06-11")
         );
 
         when(service.obtenerPorId(2)).thenReturn(Optional.of(solicitud));
@@ -55,9 +65,16 @@ public class SolicitudAyudaControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.idSolicitud").value(2))
                 .andExpect(jsonPath("$.correoUsuario").value("usuario@correo.cl"))
-                .andExpect(jsonPath("$.asunto").value("Consulta"));
+                .andExpect(jsonPath("$.asunto").value("Consulta"))
+                .andExpect(jsonPath("$._links.self.href").exists())
+                .andExpect(jsonPath("$._links.todos.href").exists())
+                .andExpect(jsonPath("$._links.eliminar.href").exists());
     }
 
+    /**
+     * Test para GET /api/v1/ayuda/99
+     * Verifica que si la solicitud no existe, se responde con 404.
+     */
     @Test
     void obtenerPorId_inexistente_deberiaRetornar404() throws Exception {
         when(service.obtenerPorId(99)).thenReturn(Optional.empty());
@@ -66,16 +83,22 @@ public class SolicitudAyudaControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    /**
+     * Test para GET /api/v1/ayuda/usuario/docente@correo.cl
+     * Verifica que se obtengan solicitudes filtradas por correo del usuario.
+     */
     @Test
-    void obtenerPorCorreo_deberiaRetornarOkYJson() throws Exception {
-        List<SolicitudAyuda> lista = Arrays.asList(
-            new SolicitudAyuda(3, "docente@correo.cl", "Error", "Sistema caído", Date.valueOf("2025-06-12"))
+    void obtenerPorCorreo_deberiaRetornarOKYJson() throws Exception {
+        List<SolicitudAyuda> lista = List.of(
+                new SolicitudAyuda(3, "docente@correo.cl", "Error", "Sistema caído", Date.valueOf("2025-06-12"))
         );
 
         when(service.obtenerPorCorreoUsuario("docente@correo.cl")).thenReturn(lista);
 
         mockMvc.perform(get("/api/v1/ayuda/usuario/docente@correo.cl"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].correoUsuario").value("docente@correo.cl"));
+                .andExpect(jsonPath("$._embedded.solicitudAyudaList[0].correoUsuario").value("docente@correo.cl"))
+                .andExpect(jsonPath("$._embedded.solicitudAyudaList[0].asunto").value("Error"))
+                .andExpect(jsonPath("$._embedded.solicitudAyudaList[0]._links.self.href").exists());
     }
 }
