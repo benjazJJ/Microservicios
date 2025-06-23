@@ -6,6 +6,7 @@ import com.example.Microservicio.de.Stock.Model.LibroStock;
 import com.example.Microservicio.de.Stock.Repository.CategoriaRepository;
 import com.example.Microservicio.de.Stock.Repository.EstadoLibroRepository;
 import com.example.Microservicio.de.Stock.Repository.LibroStockRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -103,6 +104,20 @@ public class LibroStockServiceTest {
 
         LibroStock resultado = service.mapToLibroStock(datos);
         assertEquals("El Principito", resultado.getNombreLibro());
+    }
+
+    @Test
+    void validarUsuario_credencialesInvalidas_deberiaRetornarNoAutenticado() {
+        // Simula respuesta de WebClient ante credenciales inválidas (Unauthorized)
+        LibroStockService spyService = spy(service);
+        doReturn(new ValidacionResponse(false, "DESCONOCIDO"))
+                .when(spyService)
+                .validarUsuario("correo@falso.cl", "claveIncorrecta");
+
+        ValidacionResponse respuesta = spyService.validarUsuario("correo@falso.cl", "claveIncorrecta");
+
+        assertFalse(respuesta.isAutenticado());
+        assertEquals("DESCONOCIDO", respuesta.getRol());
     }
 
     @Test
