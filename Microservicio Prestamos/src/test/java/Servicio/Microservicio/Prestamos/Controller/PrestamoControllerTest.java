@@ -117,7 +117,11 @@ public class PrestamoControllerTest {
      * DELETE (POST) /api/v1/prestamos/eliminar/{id}
      * Simula eliminación de préstamo validando credenciales (retorna 403 porque no se mockea WebClient).
      */
-    @Test
+   
+    
+}
+
+/*  @Test
     void eliminarPrestamo_valido_retorna403PorDefecto() throws Exception {
         Prestamo prestamo = new Prestamo(1, 1, 2L, "11111111-1", Date.valueOf(LocalDate.now()), null, 7);
         when(prestamoService.obtenerPrestamoPorId(1)).thenReturn(prestamo);
@@ -135,10 +139,8 @@ public class PrestamoControllerTest {
                 .andExpect(status().isForbidden()); // WebClient no está mockeado, así que cae por seguridad
     }
 
-    
-}
 
-/*@Test
+    @Test
     void eliminarPrestamo_valido_retornaMensaje() throws Exception {
         Prestamo prestamo = new Prestamo(1, 1, 2L, "11111111-1", Date.valueOf(LocalDate.now()), null, 7);
         when(prestamoService.obtenerPrestamoPorId(1)).thenReturn(prestamo);

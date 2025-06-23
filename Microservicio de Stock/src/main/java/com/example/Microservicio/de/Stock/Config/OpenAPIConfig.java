@@ -14,6 +14,6 @@ public class OpenAPIConfig {
         .info(new Info()
         .title("Multas Biblioteca API")
         .version("1.0")
-        .description("Documentacion de endpoints del microservicio de Multas"));
+        .description("Documentacion de endpoints del microservicio de Stock de la Biblioteca"));
     }
 }
