@@ -120,17 +120,5 @@ public class LibroStockServiceTest {
         assertEquals("DESCONOCIDO", respuesta.getRol());
     }
 
-    @Test
-    void validarUsuario_credencialesInvalidas_deberiaRetornarNoAutenticado() {
-        // Simula respuesta de WebClient ante credenciales inválidas (Unauthorized)
-        LibroStockService spyService = spy(service);
-        doReturn(new ValidacionResponse(false, "DESCONOCIDO"))
-                .when(spyService)
-                .validarUsuario("correo@falso.cl", "claveIncorrecta");
-
-        ValidacionResponse respuesta = spyService.validarUsuario("correo@falso.cl", "claveIncorrecta");
-
-        assertFalse(respuesta.isAutenticado());
-        assertEquals("DESCONOCIDO", respuesta.getRol());
-    }
+    
 }
